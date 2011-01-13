@@ -1,0 +1,19 @@
+Pour le 17 janvier :
+
+- Lecteur audio
+- Play / pause
+- playlist
+- volume
+- (opt) spectre
+- (supra opt.) equalizer
+
+- Incrustation lecteur video
+- Play / pause
+- Volume
+- inclusion dans la playlist
+
+
+classe a voir :
+Sound, SoundChannel, propriété = soundTransform
+
+Video
