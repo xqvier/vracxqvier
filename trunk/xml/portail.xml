@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="portail.xslt"?>
+<bdd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="portail.xsd">
+	<article>
+		<titre>test</titre>
+		<site>http://www.google.com</site>
+		<auteur>Auteur 1</auteur>
+		<auteur>Auteur 2</auteur>
+		<date>2010-11-17</date>
+		<resume> resumé de l'article</resume>
+		<keyword>Mot cle 1</keyword>
+		<keyword>Mot cle 2</keyword>
+		<src>http://www.leparisien.fr/transports/un-rapport-au-vitriol-contre-la-ratp-et-la-sncf-17-11-2010-1153595.php</src>
+	</article>
+	<article>
+		<titre>test 2</titre>
+		<site>http://www.xqvier.com</site>
+		<auteur>Auteur 1</auteur>
+		<auteur>Auteur 3</auteur>
+		<date>2011-01-03</date>
+		<resume> resumé de l'article again</resume>
+		<keyword>Mot cle 2</keyword>
+		<keyword>Mot cle 5</keyword>
+		<src>http://www.xqvier.com/creations.php</src>
+	</article>
+</bdd>
