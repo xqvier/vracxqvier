@@ -1,0 +1,65 @@
+body
+{
+	width: 95%;
+	margin: auto;
+	background: url('images/fond.png');
+	color: black;
+    padding:20px;
+}
+a
+{
+	color: green;
+	text-decoration: none;
+}
+a:hover
+{
+	color: gray;
+}
+a:active
+{
+	color: red;
+}
+h1
+{
+	border-bottom: 1px gray solid;
+	font-size: 14px;
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+}
+div
+{
+	background: #e6ecfa;
+	border: 1px solid black;
+	margin-bottom: 20px;
+	padding: 5px;
+}
+#header
+{
+	width: 100%;
+	height: 20px;
+	margin: auto;
+	margin-bottom: 20px;
+	text-align: center;
+}
+#auteurs
+{
+	float: left;
+	width: 18%;
+}
+#keywords
+{
+    float: right;
+    width: 18%;
+}
+#main
+{
+	margin-left: 20%;
+	margin-right: 20%;
+	margin-bottom: 20px;
+	padding: 10px;
+
+	background: #e6ecfa;
+   
+	border: 1px solid black;
+}
