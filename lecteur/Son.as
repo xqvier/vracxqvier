@@ -5,9 +5,7 @@
 	
 	import flash.net.URLRequest;
 	
-	public class Son {
-		private var titre:String;
-		private var pos:Number = 0;
+	public class Son extends Media{
 		
 		private var playin:Boolean = true;
 		private var son:Sound;
@@ -22,16 +20,21 @@
 			this.transf = new SoundTransform();
 		}
 		public function play(){
-			this.channel = son.play(pos);
+			this.channel = this.son.play(this.pos);
 			this.channel.soundTransform = transf;
 		}
 		public function pause(){
-			this.pos = channel.position;
+			this.pos = this.channel.position;
 			this.channel.stop();
 		}
 		public function stop(){
 			this.pos = 0;
 			this.channel.stop();
+		}
+		public function setVolume(vol:int):void{
+			var x:Number = vol/100;
+			this.transf.volume = x;
+			this.channel.soundTransform = transf;
 		}
 	}
 }
