@@ -10,7 +10,9 @@
 		private var playlist:Playlist;
 		private var playin:Boolean = false;
 		
-		public function Main() {
+		public function Main() {			
+			playlist = new Playlist();
+			
 			this.addChild(playButton);
 			this.addChild(stopButton);
 			this.addChild(volume);
@@ -18,6 +20,7 @@
 			volume.addChild(volume.volumeSpinner);
 			this.addChild(prevButton);
 			this.addChild(nextButton);
+			this.addChild(playlist);
 			
 			playButton.x = 50;
 			playButton.y = 20;
@@ -38,6 +41,8 @@
 			stopButton.width = 20;
 			prevButton.width = 20;
 			nextButton.width = 20;
+			volume.height = 30;
+			volume.width = 100;
 			
 			playButton.addEventListener(MouseEvent.CLICK, goPause);
 			stopButton.addEventListener(MouseEvent.CLICK, goStop);
@@ -49,17 +54,8 @@
 			this.addEventListener(Event.ENTER_FRAME, enter_frame);
 			
 			
-			playlist = new Playlist();
-			while(!playlist.isReady()){
-				trace("not ready");
-			}
-			
 		}
-		private function playlistReady(event:Event){
-			var text:TextField = playlist.text();
 		
-			this.addChild(text);
-		}
 		private function goPause(event:MouseEvent){
 			if(playin){
 				playlist.pause();

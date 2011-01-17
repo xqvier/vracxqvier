@@ -3,14 +3,12 @@
 	import com.adobe.serialization.json.JSON;
 	import flash.net.URLLoader;
 	import flash.events.Event;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
+	import flash.text.TextField;	import flash.display.MovieClip;
 
-	public class Playlist{
+	public class Playlist extends MovieClip{
 		private var list:Array = new Array();
 		private var position:int = 0;
 		private var urlload:URLLoader;
-		private var ready:Boolean = false;
 		
 		public function Playlist(){
 			load();
@@ -33,16 +31,13 @@
 					
 				}
 			}
-			this.ready = true;
-		}
-		public function isReady():Boolean{
-			return ready;
+			this.print();
 		}
 		private function add(med:Media, pos:int):void{
 			//list.addItemAt(med, pos);
 			list.push(med);
 		}
-		public function play():void{
+		public function goPlay():void{
 			list[this.position].play();
 		}
 		public function del(son:Son):void{
@@ -50,7 +45,7 @@
 		public function pause():void{
 			list[this.position].pause();
 		}
-		public function stop():void{
+		public function goStop():void{
 			list[position].stop();
 		}
 		public function prev():void{
@@ -76,18 +71,14 @@
 			this.list[this.position].setVolume(vol);
 		}
 		
-		public function text():TextField{
+		public function print():void{
 			var text:TextField = new TextField();
 			text.x = 0;
 			text.y = 50;
-			text.setTextFormat(new TextFormat());
-			text.text = "SALUT";
-			trace(this.list.length);
 			for(var i:int = 0;i<this.list.length;i++){
 				text.appendText(this.list[i].getTitre()+"\n");
-				trace(this.list[i].getTitre()+"\n");
 			}
-			return text;
+			this.addChild(text);
 		}
 	}
 }
