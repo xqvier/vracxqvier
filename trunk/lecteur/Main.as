@@ -8,7 +8,6 @@
 	
 	public class Main extends MovieClip {
 		private var playlist:Playlist;
-		private var playin:Boolean = false;
 		
 		public function Main() {			
 			playlist = new Playlist();
@@ -43,6 +42,8 @@
 			nextButton.width = 20;
 			volume.height = 30;
 			volume.width = 100;
+//			playlist.width = stage.stageWidth;
+//			playlist.height = 300;
 			
 			playButton.addEventListener(MouseEvent.CLICK, goPause);
 			stopButton.addEventListener(MouseEvent.CLICK, goStop);
@@ -51,30 +52,22 @@
 			volume.volumeSpinner.addEventListener(MouseEvent.MOUSE_DOWN, manageVolume);
 			volume.volumeBar.addEventListener(MouseEvent.CLICK, setVolume)
 			this.addEventListener(MouseEvent.MOUSE_UP, stopDr);
-			this.addEventListener(Event.ENTER_FRAME, enter_frame);
 			
 			
 		}
 		
 		private function goPause(event:MouseEvent){
-			if(playin){
-				playlist.pause();
-				playin = false;
-			} else {
-				playlist.play();
-				playin = true;
-			}
+			playlist.goPause();
 		}
 		
 		private function goStop(event:MouseEvent){
-			playlist.stop();
-			playin = false;
+			playlist.goStop();
 		}
 		private function goPrev(event:MouseEvent){
-			playlist.prev();
+			playlist.goPrev();
 		}
 		private function goNext(event:MouseEvent){
-			playlist.next();
+			playlist.goNext();
 		}
 		
 		private function manageVolume(event:MouseEvent){
@@ -84,6 +77,7 @@
 			var h:int = 0;
 			var rect:Rectangle = new Rectangle(posx,posy,w,h);
 			volume.volumeSpinner.startDrag(false,rect);
+			this.addEventListener(Event.ENTER_FRAME, enter_frame);
 		}
 		private function setVolume(event:MouseEvent):void {
 			if(event.stageX > volume.x + volume.volumeBar.width - volume.volumeSpinner.width){
@@ -94,11 +88,12 @@
 		}
 		private function stopDr(event:MouseEvent){
 			volume.volumeSpinner.stopDrag();
+			this.removeEventListener(Event.ENTER_FRAME, enter_frame);
 		}
 		private function enter_frame(event:Event){
-			if(playin){
+			if(this.playlist.isPlayin()){
 				var vol:int = (volume.volumeSpinner.x - volume.volumeBar.x) * 100 / (volume.volumeBar.width-volume.volumeSpinner.width);
-				playlist.setVolume(vol);
+				//playlist.setVolume(vol);
 			}
 		}
 	}
