@@ -3,11 +3,13 @@
 		{
 			"type": "sound",
 			"url": "sounds/possible_future.mp3",
+			"titre": "Possible future",
 			"pos": 1
 		},
 		{
 			"type": "sound",
 			"url": "sounds/sunburn.mp3",
+			"titre": "Muse - Sunburn",
 			"pos": 2
 		}
 	]

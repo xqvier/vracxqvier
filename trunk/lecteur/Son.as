@@ -12,7 +12,8 @@
 		private var channel:SoundChannel;
 		private var transf:SoundTransform;
 		
-		public function Son(url:String){
+		public function Son(url:String, titre:String){
+			this.titre = titre;
 			var urlRequest:URLRequest = new URLRequest(url);
 			this.son = new Sound();
 			this.son.load(urlRequest);

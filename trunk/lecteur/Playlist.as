@@ -3,9 +3,11 @@
 	import com.adobe.serialization.json.JSON;
 	import flash.net.URLLoader;
 	import flash.events.Event;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 
 	public class Playlist {
-		private var list
+		private var list:Array = new Array();
 		private var position:int = 0;
 		private var urlload:URLLoader;
 		public function Playlist(){
@@ -25,30 +27,62 @@
 			for(var i:int = 0; i<o.playlist.length ; i++){
 				if(o.playlist[i].type == "sound"){
 					
-					var son:Son = new Son(o.playlist[i].url);
+					var son:Son = new Son(o.playlist[i].url, o.playlist[i].titre);
 					add(son,o.playlist[i].pos);
 					
 				}
 			}
-			playlist.sort();
 		}
 		
 		private function add(med:Media, pos:int):void{
-			list.addItemAt(med, pos);
+			//list.addItemAt(med, pos);
+			list.push(med);
 		}
 		public function play():void{
-			list[position].play();
+			list[this.position].play();
 		}
 		public function del(son:Son):void{
 		}
 		public function pause():void{
-			list[position].pause();
+			list[this.position].pause();
 		}
 		public function stop():void{
 			list[position].stop();
 		}
+		public function prev():void{
+			this.stop();
+			if(this.position == 0){
+				this.position = this.list.length-1;
+			} else {
+				this.position--;
+			}
+			this.play();
+		}
+		public function next():void{
+			this.stop();
+			if(this.position == this.list.length-1){
+				this.position = 0;
+			} else {
+				this.position++;
+			}
+			this.play();
+		}
 		public function setVolume(vol:int):void{
-			list[position].setVolume(vol);
+			this.list[this.position].setVolume(vol);
+		}
+		
+		public function toString():TextField{
+			var text:TextField = new TextField();
+			text.x = 0;
+			text.y = 50;
+			text.setTextFormat(new TextFormat());
+			text.text = "SALUT";
+			trace(this.list.length);
+			for(var i:int = 0;i<this.list.length;i++){
+				text.appendText(this.list[i].getTitre()+"\n");
+				trace(this.list[i].getTitre()+"\n");
+			}
+			return text;
 		}
 	}
 }
