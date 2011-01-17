@@ -6,10 +6,12 @@
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 
-	public class Playlist {
+	public class Playlist{
 		private var list:Array = new Array();
 		private var position:int = 0;
 		private var urlload:URLLoader;
+		private var ready:Boolean = false;
+		
 		public function Playlist(){
 			load();
 		}
@@ -23,7 +25,6 @@
 		}
 		private function loadComplete(event:Event):void{
 			var o:Object = JSON.decode(urlload.data as String);
-			//trace(o.playlist[0].url as String);
 			for(var i:int = 0; i<o.playlist.length ; i++){
 				if(o.playlist[i].type == "sound"){
 					
@@ -32,8 +33,11 @@
 					
 				}
 			}
+			this.ready = true;
 		}
-		
+		public function isReady():Boolean{
+			return ready;
+		}
 		private function add(med:Media, pos:int):void{
 			//list.addItemAt(med, pos);
 			list.push(med);
@@ -51,6 +55,7 @@
 		}
 		public function prev():void{
 			this.stop();
+			trace(this.list.length);
 			if(this.position == 0){
 				this.position = this.list.length-1;
 			} else {
@@ -71,7 +76,7 @@
 			this.list[this.position].setVolume(vol);
 		}
 		
-		public function toString():TextField{
+		public function text():TextField{
 			var text:TextField = new TextField();
 			text.x = 0;
 			text.y = 50;
