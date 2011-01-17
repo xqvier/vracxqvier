@@ -1,7 +1,14 @@
 {	
-	"playlist": { 	
-		"type": "sound",
-		"url": "sounds/possible_future.mp3"
-		"pos": 1
-	}
+	"playlist" : [
+		{
+			"type": "sound",
+			"url": "sounds/possible_future.mp3",
+			"pos": 1
+		},
+		{
+			"type": "sound",
+			"url": "sounds/sunburn.mp3",
+			"pos": 2
+		}
+	]
 }
