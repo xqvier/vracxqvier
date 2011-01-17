@@ -1,19 +1,30 @@
-Pour le 17 janvier :
+Pour le 24 janvier 2011
 
-- Lecteur audio
-- Play / pause
-- playlist
-- volume
-- (opt) spectre
-- (supra opt.) equalizer
-
-- Incrustation lecteur video
-- Play / pause
-- Volume
-- inclusion dans la playlist
+- Lecteur audio (mp3),
+. Play / pause
+. Volume
+. gestion playlist 
+. spectre du son
 
 
-classe a voir :
-Sound, SoundChannel, propriété = soundTransform
+- Lecture de vidéo inclus dans le même lecteur (flv, mp4, f4v géré par Flash)
+. Play / pause
+. Volume
+. inclusion dans la playlist des sons (ce-dessus)
+. ratio 4/3 - 16/9
+. plein écran (pour l'autoriser, paramètres de publication, html, modèle : flash seulement - Autorisation de plein écran)
+
+
+MEMO :
+pour convertir les points x, y d'un objet graphique à un autre,
+utiliser : DisplayObject - localToGlobal, globalToLocal
+
+classe à voir :
+Sound, SoundChannel, SoundTransform (SoundMixer)
 
 Video
+onMetaData
+Fichiers à lire : 
+- S:\Commun\Multimedia\Flash\ActionScript\Player\assets
+- un mp4 en 16/9 ici (un seul téléchargement car assez lourd)
+http://www.bigbuckbunny.org/index.php/download/
