@@ -3,13 +3,15 @@
 	import com.adobe.serialization.json.JSON;
 	import flash.net.URLLoader;
 	import flash.events.Event;
-	import flash.text.TextField;	import flash.display.MovieClip;
+	import flash.text.TextField;	
+	import flash.display.MovieClip;
 
 	public class Playlist extends MovieClip{
 		private var list:Array = new Array();
 		private var position:int = 0;
 		private var urlload:URLLoader;
-		
+		private var text:TextField;
+		private var printedMed:Media;
 		public function Playlist(){
 			load();
 		}
@@ -29,56 +31,80 @@
 					var son:Son = new Son(o.playlist[i].url, o.playlist[i].titre);
 					add(son,o.playlist[i].pos);
 					
+				} else if (o.playlist[i].type == "video"){
+					var vid:Vid = new Vid(o.playlist[i].url, o.playlist[i].titre, o.playlist[i].codec);
+					add(vid,o.playlist[i].pos);
 				}
 			}
-			this.print();
+			print();
 		}
 		private function add(med:Media, pos:int):void{
 			//list.addItemAt(med, pos);
-			list.push(med);
-		}
-		public function goPlay():void{
-			list[this.position].play();
+			this.list.push(med);
 		}
 		public function del(son:Son):void{
 		}
-		public function pause():void{
-			list[this.position].pause();
+		public function goPause():void{
+			if(this.isPlayin()){
+				this.list[this.position].goPause();
+			} else {
+				this.list[this.position].goPlay();
+			}
 		}
 		public function goStop():void{
-			list[position].stop();
+			this.list[this.position].goStop();
+			this.repaint();
 		}
-		public function prev():void{
-			this.stop();
-			trace(this.list.length);
-			if(this.position == 0){
+		public function goPrev():void{
+			this.goStop();
+			trace(this.list.length);			if(this.position == 0){
 				this.position = this.list.length-1;
 			} else {
 				this.position--;
 			}
-			this.play();
+			this.goPause();
+			this.repaint();
 		}
-		public function next():void{
-			this.stop();
+		public function goNext():void{
+			this.goStop();
 			if(this.position == this.list.length-1){
 				this.position = 0;
 			} else {
 				this.position++;
 			}
-			this.play();
+			this.goPause();
+			this.repaint();
 		}
 		public function setVolume(vol:int):void{
 			this.list[this.position].setVolume(vol);
 		}
 		
-		public function print():void{
-			var text:TextField = new TextField();
-			text.x = 0;
-			text.y = 50;
+		private function print():void{
+			this.text = new TextField();
+			this.text.x = 0;
+			this.text.y = 50;
+			this.text.height = 300;
+			this.text.width = 200;
 			for(var i:int = 0;i<this.list.length;i++){
-				text.appendText(this.list[i].getTitre()+"\n");
+				this.text.appendText(this.list[i].getTitre());
+				if(i==this.position){
+					this.text.appendText(" (currently selected)");
+				}
+				this.text.appendText("\n");
 			}
-			this.addChild(text);
+			this.addChild(this.text);
+			this.printedMed = this.list[this.position];
+			this.addChild(this.printedMed);
+			this.printedMed.x = 200;
+			this.printedMed.y = 50;
+		}
+		private function repaint():void{
+			this.removeChild(this.text);
+			this.removeChild(this.printedMed);
+			this.print();
+		}
+		public function isPlayin():Boolean{
+			return this.list[this.position].isPlayin();
 		}
 	}
 }

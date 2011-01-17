@@ -1,6 +1,8 @@
 ﻿package  {
 	
-	public class Media {
+	import flash.display.MovieClip;
+	
+	public class Media extends MovieClip{
 		protected var titre:String;
 		protected var pos:Number = 0;
 

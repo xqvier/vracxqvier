@@ -11,6 +11,13 @@
 			"url": "sounds/sunburn.mp3",
 			"titre": "Muse - Sunburn",
 			"pos": 2
-		}
+		},
+        {
+            "type": "video",
+            "url": "lost.mp4",
+            "titre": "Lost",
+            "pos": 3,
+            "codec": "mp4"
+        }
 	]
 }
