@@ -50,7 +50,15 @@
 			
 			
 			playlist = new Playlist();
+			while(!playlist.isReady()){
+				trace("not ready");
+			}
 			
+		}
+		private function playlistReady(event:Event){
+			var text:TextField = playlist.text();
+		
+			this.addChild(text);
 		}
 		private function goPause(event:MouseEvent){
 			if(playin){
