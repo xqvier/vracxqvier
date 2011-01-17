@@ -13,7 +13,7 @@
 		private var transf:SoundTransform;
 		
 		public function Son(url:String, titre:String){
-			this.titre = titre;
+			super(titre);
 			var urlRequest:URLRequest = new URLRequest(url);
 			this.son = new Sound();
 			this.son.load(urlRequest);
@@ -35,7 +35,7 @@
 		public function setVolume(vol:int):void{
 			var x:Number = vol/100;
 			this.transf.volume = x;
-			this.channel.soundTransform = transf;
+			this.channel.soundTransform = this.transf;
 		}
 	}
 }
