@@ -1,0 +1,13 @@
+
+
+------------------------------------------
+-- Test, exemple de compilation et exécution
+------------------------------------------
+ 
+javac -cp classes12.jar Jdbc01SelectStat.java
+java  -cp classes12.jar;. Jdbc01SelectStat
+
+
+javac -cp ojdbc14.zip Jdbc01SelectStat.java
+java  -cp ojdbc14.zip;. Jdbc01SelectStat
+
