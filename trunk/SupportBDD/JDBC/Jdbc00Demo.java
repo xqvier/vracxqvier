@@ -11,7 +11,7 @@ public class Jdbc00Demo {
 // Chargement du pilote Oracle
 		DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver()); 
 // Connexion à la base de données
-		String url = "MEDIATEUR??:SGBD??:PROTOCOLE??:@MACHINE??.ADRESSE??.local:PORT??:INSTANCE??";
+		String url = "MEDIATEUR??:SGBD??:PROTOCOLE??:@MACHINE??.ADRESSE??.local:PORT??:XE";
 		Connection cnx = DriverManager.getConnection(url, "USER??", "PWD??"); 
 // Requête statique
 		Statement req = cnx.createStatement (); 
