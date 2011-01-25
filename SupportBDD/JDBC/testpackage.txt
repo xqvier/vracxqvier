@@ -1,0 +1,46 @@
+
+SET SERVEROUTPUT ON
+
+DECLARE
+  cpt char(6);
+ BEGIN
+  gestcomptes.ouvrir('000101',cpt);
+  dbms_output.put_line(cpt);
+ END;
+/
+
+-- ORA-20018: CREATION DU COMPTE IMPOSSIBLE. LE NUMERO DE CLIENT EST-IL VALIDE ?
+
+DECLARE
+  cpt char(6);
+ BEGIN
+  gestcomptes.ouvrir('000001',cpt);
+  gestcomptes.ouvrir('000001',cpt);
+  dbms_output.put_line(cpt);
+ END;
+/
+
+
+EXEC  gestcomptes.deposer('FRM01',100);
+EXEC  gestcomptes.deposer('FRM01',100);
+EXEC  gestcomptes.deposer('FRM01',100);
+EXEC  gestcomptes.deposer('FRM01',100);
+EXEC  gestcomptes.deposer('FRM01',100);
+EXEC  gestcomptes.deposer('FRM01',100);
+
+
+EXEC  dbms_output.put_line(gestcomptes.solde('FRM01'));
+
+EXEC  gestcomptes.retirer('FRM01',80);
+
+EXEC  dbms_output.put_line(gestcomptes.solde('FRM01'));
+
+EXEC  gestcomptes.transferer('FRM01','FRM01',80);
+-- ORA-20016: UN VIREMENT DOIT ETRE EFFECTUE ENTRE DEUX COMPTES DISTINCTS.
+
+EXEC  gestcomptes.transferer('FRM01','FRM02',4);
+EXEC  dbms_output.put_line(gestcomptes.solde('FRM01'));
+
+
+EXEC  gestcomptes.transferer('FRM01','FRM02',4000);
+-- ORA-20002: PAS ASSEZ D'ARGENT POUR EFFECTUER L'OPERATION

@@ -1,0 +1,3 @@
+START "\\dometud\Serveurs\Serveur.LPD2i\Support\BD\JDBC\creeBD_Gestcomptes.sql"
+START "\\dometud\Serveurs\Serveur.LPD2i\Support\BD\JDBC\creePCK_GestcomptesSpec.sql"
+START "\\dometud\Serveurs\Serveur.LPD2i\Support\BD\JDBC\creePCK_GestcomptesBody.sql"
