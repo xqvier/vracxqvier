@@ -21,7 +21,7 @@ public class MyTask extends TimerTask {
     @Override
     public void run() {
 	i++;
-	System.out.println(i);
+	//AlarmeMuscu.msg.setText(Integer.toBinaryString(i));
     }
 
 }
