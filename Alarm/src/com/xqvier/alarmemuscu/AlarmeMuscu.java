@@ -28,8 +28,7 @@ public class AlarmeMuscu extends Activity {
     @Override
     protected void onResume() {
 	super.onResume();
-	Intent in = new Intent(Intent.ACTION_PICK, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
-	in.setAction(RingtoneManager.ACTION_RINGTONE_PICKER);
+	Intent in = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER ,RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL));
 	startActivityForResult(in, 12);
         tim.schedule(task, 2000,2000);
     }
@@ -39,8 +38,6 @@ public class AlarmeMuscu extends Activity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	// TODO Auto-generated method stub
-	super.onActivityResult(requestCode, resultCode, data);
 	if(resultCode == Activity.RESULT_OK && requestCode == 12) {
 	    System.out.println(data.toString());
 	}
