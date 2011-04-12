@@ -19,6 +19,7 @@ public class AlarmeMuscu extends Activity {
         TextView tv = new TextView(this);
         
         tv.setText("Salut romain ! ");        
+        setContentView(tv);
     }
 
     /* (non-Javadoc)
