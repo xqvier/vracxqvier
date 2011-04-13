@@ -4,8 +4,7 @@ import java.util.Timer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.provider.ContactsContract;
 import android.widget.TextView;
 
 public class AlarmeMuscu extends Activity {
@@ -35,6 +34,8 @@ public class AlarmeMuscu extends Activity {
     protected void onResume() {
 	super.onResume();
 	//Intent in = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER ,RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL));
+	Intent in = new Intent(Intent.ACTION_PICK, ContactsContract.AUTHORITY_URI);
+	startActivityForResult(in, 12);
 	//startActivityForResult(in, 12);
 	
         //tim.schedule(task, 2000,2000);
@@ -46,7 +47,7 @@ public class AlarmeMuscu extends Activity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	if(resultCode == Activity.RESULT_OK && requestCode == 12) {
+	if(resultCode == RESULT_OK && requestCode == 12) {
 	    System.out.println(data.toString());
 	}
     }
