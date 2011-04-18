@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal">
+		<EditText android:layout_width="wrap_content" android:id="@+id/weightEditBox"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:inputType="numberDecimal" android:hint="@string/hint_weight_edittext"
+			android:gravity="center" />
+		<TextView android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:text="@string/weight_unit" />
+	</LinearLayout>
+	<Button android:id="@+id/saveButton" android:text="@string/save_button"
+		android:layout_width="fill_parent" android:layout_height="wrap_content" />
+	<Button android:id="@+id/showStatButton" android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:text="@string/show_stats_button" />
+</LinearLayout>

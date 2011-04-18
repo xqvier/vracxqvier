@@ -15,4 +15,10 @@
     <string name="error_beep">Il faut choisir une sonnerie</string>
     <string name="select_timer">Intervalle entre les beeps :</string>
     <string name="select_delay">Délai avant le lancement : </string>
+    <string name="hint_weight_edittext">90.0</string>
+    <string name="weight_unit">kg</string>
+    <string name="save_button">Enregistrer</string>
+    <string name="show_stats_button">Voir les stats</string>
+    <string name="error_weight">Il faut rentrer un poids pour enregistrer</string>
+    <string name="stats_name">Statistiques</string>
 </resources>

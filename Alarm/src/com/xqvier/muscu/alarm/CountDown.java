@@ -24,22 +24,52 @@ import com.xqvier.muscu.R;
  * @version
  */
 public class CountDown extends Activity {
+    /** Nombre de minutes pour le timer */
     private int minuteTimer;
+    
+    
+    /** TODO Comment attribute */
     private int secondTimer;
+    
+    /** TODO Comment attribute */
     private int minuteDelay;
+    
+    /** TODO Comment attribute */
     private int secondDelay;
+    
+    /** TODO Comment attribute */
     private Ringtone beep;
+    
+    /** TODO Comment attribute */
     private TextView time;
+    
+    /** TODO Comment attribute */
     private TextView countTextView;
+    
+    /** TODO Comment attribute */
     private Button stopButton;
+    
+    /** TODO Comment attribute */
     private Button restartButton;
+    
+    /** TODO Comment attribute */
     private Button resumeButton;
+    
+    /** TODO Comment attribute */
     private ViewSwitcher switcher;
+    
+    /** TODO Comment attribute */
     private CountDownTimer timer;
+    
+    /** TODO Comment attribute */
     private long currentPos = 0;
+    
+    /** TODO Comment attribute */
     private int count = 0;
+    
+    /** TODO Comment attribute */
     private CharSequence countText;
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -176,6 +206,5 @@ public class CountDown extends Activity {
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        
     }
 }

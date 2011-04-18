@@ -173,7 +173,6 @@ public class AlarmConfiguration extends Activity {
     private void restoreTime() {
 	this.minute = settings.getInt("minute", 0);
 	this.second = settings.getInt("second", 0);
-	System.out.println(this.minute + " " + this.second);
     }
 
     /*
