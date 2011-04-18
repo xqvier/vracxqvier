@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, AlarmeMuscu!</string>
     <string name="app_name">Alarme Muscu</string>
+    <string name="alarm_name">Alarme</string>
+    <string name="weight_name">Poids</string>
+    <string name="start_button">Start</string>
+    <string name="cancel_button">Stop</string>
+    <string name="select_beep_button">Sonnerie</string>
+    <string name="timer_name">Timer</string>
 </resources>
