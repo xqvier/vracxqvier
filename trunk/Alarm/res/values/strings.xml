@@ -11,14 +11,19 @@
     <string name="restart_button">Restart</string>
     <string name="continue_button">Reprendre</string>
     <string name="count">Nombre de cycle : </string>
-    <string name="error_zero">Le temps du timer doit être supérieur à 0</string>
+    <string name="error_zero">Le temps des timer ($exercise et $recovery) doivent être supérieur à 0</string>
     <string name="error_beep">Il faut choisir une sonnerie</string>
-    <string name="select_timer">Intervalle entre les beeps :</string>
-    <string name="select_delay">Délai avant le lancement : </string>
+    <string name="delay">Délai avant le lancement : </string>
     <string name="hint_weight_edittext">90.0</string>
     <string name="weight_unit">kg</string>
     <string name="save_button">Enregistrer</string>
     <string name="show_stats_button">Voir les stats</string>
     <string name="error_weight">Il faut rentrer un poids pour enregistrer</string>
     <string name="stats_name">Statistiques</string>
+    <string name="exercise">Temps d\'exercice : </string>
+    <string name="recovery">Temps de récupération : </string>
+    <string name="statusExercise">Exercice</string>
+    <string name="statusRecovery">Recupération</string>
+    <string name="pause">Pause</string>
+    <string name="statusPrepare">Préparation</string>
 </resources>

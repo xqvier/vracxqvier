@@ -28,10 +28,16 @@ import com.xqvier.muscu.R;
  */
 public class AlarmConfiguration extends Activity {
     /** Widget - Spinner pour selectionner les minutes du timer */
-    private Spinner minuteTimerSpinner;
+    private Spinner minuteExerciseSpinner;
 
     /** Widget - Spinner pour selectionner les secondes du timer */
-    private Spinner secondTimerSpinner;
+    private Spinner secondExerciseSpinner;
+
+    /** Widget - Spinner pour selectionner les minutes du timer */
+    private Spinner minuteRecoverySpinner;
+
+    /** Widget - Spinner pour selectionner les secondes du timer */
+    private Spinner secondRecoverySpinner;
 
     /** Widget - Spinner pour selectionner les minutes du délai */
     private Spinner minuteDelaySpinner;
@@ -64,8 +70,10 @@ public class AlarmConfiguration extends Activity {
 	setContentView(R.layout.alarm_configuration);
 
 	settings = getPreferences(0);
-	minuteTimerSpinner = (Spinner) findViewById(R.id.minuteTimerSpinner);
-	secondTimerSpinner = (Spinner) findViewById(R.id.secondTimerSpinner);
+	minuteExerciseSpinner = (Spinner) findViewById(R.id.minuteExerciseSpinner);
+	secondExerciseSpinner = (Spinner) findViewById(R.id.secondExerciseSpinner);
+	minuteRecoverySpinner = (Spinner) findViewById(R.id.minuteRecoverySpinner);
+	secondRecoverySpinner = (Spinner) findViewById(R.id.secondRecoverySpinner);
 	minuteDelaySpinner = (Spinner) findViewById(R.id.minuteDelaySpinner);
 	secondDelaySpinner = (Spinner) findViewById(R.id.secondDelaySpinner);
 	selectBeepButton = (Button) findViewById(R.id.selectBeepButton);
@@ -94,8 +102,10 @@ public class AlarmConfiguration extends Activity {
 
 	ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this,
 	        android.R.layout.simple_spinner_dropdown_item, val);
-	minuteTimerSpinner.setAdapter(adapter);
-	secondTimerSpinner.setAdapter(adapter);
+	minuteExerciseSpinner.setAdapter(adapter);
+	secondExerciseSpinner.setAdapter(adapter);
+	minuteRecoverySpinner.setAdapter(adapter);
+	secondRecoverySpinner.setAdapter(adapter);
 	minuteDelaySpinner.setAdapter(adapter);
 	secondDelaySpinner.setAdapter(adapter);
 
@@ -138,12 +148,23 @@ public class AlarmConfiguration extends Activity {
      * 
      */
     protected void start() {
-	int minuteTimer = (Integer) this.minuteTimerSpinner.getSelectedItem();
-	int secondTimer = (Integer) this.secondTimerSpinner.getSelectedItem();
+	int minuteExercise = (Integer) this.minuteExerciseSpinner
+	        .getSelectedItem();
+	int secondExercise = (Integer) this.secondExerciseSpinner
+	        .getSelectedItem();
+	int minuteRecovery = (Integer) this.minuteRecoverySpinner
+	        .getSelectedItem();
+	int secondRecovery = (Integer) this.secondRecoverySpinner
+	        .getSelectedItem();
 	int minuteDelay = (Integer) this.minuteDelaySpinner.getSelectedItem();
 	int secondDelay = (Integer) this.secondDelaySpinner.getSelectedItem();
+
+	int exercise = (minuteExercise*60)+ secondExercise;
+	int recovery = (minuteRecovery*60)+ secondRecovery;
+	int delay = (minuteDelay*60)+ secondDelay;
+	
 	Toast mToast;
-	if (minuteTimer == 0 && secondTimer == 0) {
+	if (exercise == 0 || recovery == 0) {
 	    mToast = Toast.makeText(this, R.string.error_zero,
 		    Toast.LENGTH_LONG);
 	    mToast.show();
@@ -158,9 +179,8 @@ public class AlarmConfiguration extends Activity {
 	}
 	// else
 	Intent intent = new Intent(this, CountDown.class);
-	int timer[] = { minuteTimer, secondTimer };
-	int delay[] = {minuteDelay, secondDelay };
-	intent.putExtra("com.xqvier.muscu.alarm.Start", timer);
+	intent.putExtra("com.xqvier.muscu.alarm.Exercise", exercise);
+	intent.putExtra("com.xqvier.muscu.alarm.Recovery", recovery);
 	intent.putExtra("com.xqvier.muscu.alarm.Delay", delay);
 	intent.putExtra("com.xqvier.muscu.alarm.Beep", uriBeep);
 	startActivity(intent);
@@ -184,10 +204,13 @@ public class AlarmConfiguration extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	if (resultCode == RESULT_OK && requestCode == RingtoneManager.TYPE_ALL) {
-	    uriBeep = (Uri) data.getExtras()
-		    .get(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-	    selectBeepButton.setText(selectBeepButton.getText() + " "
-		    + RingtoneManager.getRingtone(this, uriBeep).getTitle(this));
+	    uriBeep = (Uri) data.getExtras().get(
+		    RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+	    selectBeepButton
+		    .setText(selectBeepButton.getText()
+		            + " "
+		            + RingtoneManager.getRingtone(this, uriBeep)
+		                    .getTitle(this));
 	}
     }
 
