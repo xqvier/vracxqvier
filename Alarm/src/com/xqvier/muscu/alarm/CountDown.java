@@ -24,52 +24,63 @@ import com.xqvier.muscu.R;
  * @version
  */
 public class CountDown extends Activity {
-    /** Nombre de minutes pour le timer */
-    private int minuteTimer;
-    
-    
+    private static final short STATUS_PREPARE = 0;
+
+    private static final short STATUS_RECOVERY = 1;
+
+    private static final short STATUS_EXERCISE = 2;
+
     /** TODO Comment attribute */
-    private int secondTimer;
-    
+    private int exercise;
+
     /** TODO Comment attribute */
-    private int minuteDelay;
-    
+    private int recovery;
+
     /** TODO Comment attribute */
-    private int secondDelay;
-    
+    private int delay;
+
     /** TODO Comment attribute */
     private Ringtone beep;
-    
+
     /** TODO Comment attribute */
     private TextView time;
-    
+
     /** TODO Comment attribute */
     private TextView countTextView;
-    
+
     /** TODO Comment attribute */
     private Button stopButton;
-    
+
     /** TODO Comment attribute */
     private Button restartButton;
-    
+
     /** TODO Comment attribute */
     private Button resumeButton;
-    
+
     /** TODO Comment attribute */
     private ViewSwitcher switcher;
-    
+
     /** TODO Comment attribute */
     private CountDownTimer timer;
-    
+
     /** TODO Comment attribute */
     private long currentPos = 0;
-    
+
     /** TODO Comment attribute */
     private int count = 0;
-    
+
     /** TODO Comment attribute */
     private CharSequence countText;
-    
+
+    /** TODO Comment attribute */
+    private TextView statusText;
+
+    private boolean running;
+
+    private short status;
+
+    private boolean timerFinished;
+
     /*
      * (non-Javadoc)
      * 
@@ -88,15 +99,13 @@ public class CountDown extends Activity {
 	switcher = (ViewSwitcher) findViewById(R.id.buttonSwitcher);
 	restartButton = (Button) findViewById(R.id.restartButton);
 	resumeButton = (Button) findViewById(R.id.resumeButton);
-	minuteTimer = getIntent().getExtras().getIntArray(
-	        "com.xqvier.muscu.alarm.Start")[0];
-	secondTimer = getIntent().getExtras().getIntArray(
-	        "com.xqvier.muscu.alarm.Start")[1];
-	minuteDelay = getIntent().getExtras().getIntArray(
-	        "com.xqvier.muscu.alarm.Delay")[0];
-	secondDelay = getIntent().getExtras().getIntArray(
-	        "com.xqvier.muscu.alarm.Delay")[1];
-	beep = RingtoneManager.getRingtone(this, (Uri) getIntent().getExtras().get("com.xqvier.muscu.alarm.Beep"));
+	exercise = getIntent().getExtras().getInt(
+	        "com.xqvier.muscu.alarm.Exercise");
+	recovery = getIntent().getExtras().getInt(
+	        "com.xqvier.muscu.alarm.Recovery");
+	delay = getIntent().getExtras().getInt("com.xqvier.muscu.alarm.Delay");
+	beep = RingtoneManager.getRingtone(this, (Uri) getIntent().getExtras()
+	        .get("com.xqvier.muscu.alarm.Beep"));
 
 	stopButton.setOnClickListener(new View.OnClickListener() {
 
@@ -122,24 +131,54 @@ public class CountDown extends Activity {
 
 	    }
 	});
-	countTextView.setText(countText + " " + Integer.toString(count));
-	start();
+	status = STATUS_PREPARE;
+	timerFinished = false;
+	play(delay * 1000);
+	/*
+	 * while(true){ if(timerFinished){ timerFinished=false; if(status ==
+	 * STATUS_PREPARE || status == STATUS_RECOVERY){ status =
+	 * STATUS_EXERCISE; play(exercise*1000); } else { status =
+	 * STATUS_RECOVERY; play(recovery*1000); } } }
+	 */
+	// start();
 
     }
 
     /**
      * TODO Comment method
-     *
+     * 
      */
-    private void start() {
+    // private void start() {
+    //
+    // switcher.showNext();
+    // if (minuteDelay != 0 || secondDelay != 0) {
+    // count--;
+    // play(1000 * ((minuteDelay * 60) + secondDelay));
+    // } else {
+    // play(1000 * ((minuteExercise * 60) + secondExercise));
+    // }
+    // }
 
-	switcher.showNext();
-	if(minuteDelay != 0 || secondDelay != 0){
-	    count--;
-	    play(1000*((minuteDelay * 60) + secondDelay));
+    /**
+     * TODO Comment method
+     * 
+     */
+    private void updateDisplay() {
+	time.setText(pad((currentPos / 1000) / 60) + ":"
+	        + pad((currentPos / 1000) % 60));
+	String text = null;
+	if (status == STATUS_EXERCISE) {
+	    text = getResources().getString(R.string.statusExercise);
+	} else if (status == STATUS_PREPARE) {
+	    text = getResources().getString(R.string.statusPrepare);
 	} else {
-	    play(1000 * ((minuteTimer * 60) + secondTimer));
+	    text = getResources().getString(R.string.statusRecovery);
 	}
+	if (!running) {
+	    text += " (" + getResources().getString(R.string.pause) + ")";
+	}
+	statusText.setText(text);
+	countTextView.setText(countText + " " + Integer.toString(count));
     }
 
     /**
@@ -155,22 +194,21 @@ public class CountDown extends Activity {
 
 	    @Override
 	    public void onTick(long millisUntilFinished) {
-		time.setText(pad((millisUntilFinished / 1000) / 60) + ":"
-		        + pad((millisUntilFinished / 1000) % 60));
 		currentPos = millisUntilFinished;
+		updateDisplay();
 	    }
 
-	    
 	    @Override
 	    public void onFinish() {
-		
-		time.setText("00:00");
-		beep.play();
+
+		currentPos = 0;
 		count++;
-		countTextView.setText(countText + " " + Integer.toString(count));
-		play(1000 * ((minuteTimer * 60) + secondTimer));
+		updateDisplay();
+		beep.play();
+		timerFinished = true;
 	    }
 	};
+	running = true;
 	timer.start();
     }
 
@@ -190,7 +228,7 @@ public class CountDown extends Activity {
      */
     protected void restart() {
 	switcher.showNext();
-	play(1000 * ((minuteTimer * 60) + secondTimer));
+	// play(1000 * ((minuteExercise * 60) + secondExercise));
     }
 
     /**
@@ -198,13 +236,15 @@ public class CountDown extends Activity {
      * 
      */
     private void stop() {
+	running = false;
 	timer.cancel();
 	switcher.showNext();
+	updateDisplay();
     }
 
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
-        super.onDestroy();
+	// TODO Auto-generated method stub
+	super.onDestroy();
     }
 }

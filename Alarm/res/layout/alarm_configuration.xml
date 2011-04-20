@@ -2,18 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="match_parent"
 	android:layout_height="match_parent">
-	<TextView android:id="@+id/selectTimerText" android:text="@string/select_timer"
+	<TextView android:id="@+id/exerciseText" android:text="@string/exercise"
 		android:layout_width="fill_parent" android:layout_height="wrap_content" />
 	<LinearLayout android:orientation="horizontal"
 		android:layout_width="match_parent" android:layout_height="wrap_content">
-		<Spinner android:id="@+id/minuteTimerSpinner"
+		<Spinner android:id="@+id/minuteExerciseSpinner"
 			android:layout_width="wrap_content" android:layout_height="match_parent"
 			android:layout_weight="1" />
-		<Spinner android:id="@+id/secondTimerSpinner"
+		<Spinner android:id="@+id/secondExerciseSpinner"
 			android:layout_width="wrap_content" android:layout_height="match_parent"
 			android:layout_weight="1" />
 	</LinearLayout>
-	<TextView android:id="@+id/selectDelayText" android:text="@string/select_delay"
+	<TextView android:id="@+id/recoveryText" android:text="@string/recovery"
+		android:layout_width="fill_parent" android:layout_height="wrap_content" />
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="match_parent" android:layout_height="wrap_content">
+		<Spinner android:id="@+id/minuteRecoverySpinner"
+			android:layout_width="wrap_content" android:layout_height="match_parent"
+			android:layout_weight="1" />
+		<Spinner android:id="@+id/secondRecoverySpinner"
+			android:layout_width="wrap_content" android:layout_height="match_parent"
+			android:layout_weight="1" />
+	</LinearLayout>
+	<TextView android:id="@+id/delayText" android:text="@string/delay"
 		android:layout_width="fill_parent" android:layout_height="wrap_content" />
 	<LinearLayout android:orientation="horizontal"
 		android:layout_width="match_parent" android:layout_height="wrap_content">
