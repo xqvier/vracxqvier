@@ -51,16 +51,19 @@ public class AlarmConfiguration extends Activity {
     /** Widget - Button pour demarrer le timer */
     private Button startButton;
 
-    /** Nombre de minute pour le timer */
-    private int minute = 0;
+    /** Nombre de secondes pour le delai de préparation */
+    private int delay;
 
-    /** Nombre de secondes pour le timer */
-    private int second = 0;
-
+    /** Nombre de secondes pour le delai de recupération */
+    private int recovery;
+    
+    /** Nombre de secondes pour le timer d'exercice */
+    private int exercise;
+    
     /** La sonnerie selectionnée */
     private Uri uriBeep = null;
-
-    /** Préférences persistantes */
+    
+    /** Les données persistentes */
     SharedPreferences settings;
 
     /** Called when the activity is first created. */
@@ -68,8 +71,8 @@ public class AlarmConfiguration extends Activity {
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.alarm_configuration);
-
-	settings = getPreferences(0);
+	settings = getPreferences(MODE_PRIVATE);
+	
 	minuteExerciseSpinner = (Spinner) findViewById(R.id.minuteExerciseSpinner);
 	secondExerciseSpinner = (Spinner) findViewById(R.id.secondExerciseSpinner);
 	minuteRecoverySpinner = (Spinner) findViewById(R.id.minuteRecoverySpinner);
@@ -108,7 +111,6 @@ public class AlarmConfiguration extends Activity {
 	secondRecoverySpinner.setAdapter(adapter);
 	minuteDelaySpinner.setAdapter(adapter);
 	secondDelaySpinner.setAdapter(adapter);
-
 	restoreTime();
 
     }
@@ -137,35 +139,17 @@ public class AlarmConfiguration extends Activity {
      * TODO Comment method
      * 
      */
-    private void saveTime() {
-	settings.edit().putInt("minute", this.minute);
-	settings.edit().putInt("second", this.second);
-	settings.edit().commit();
-    }
-
-    /**
-     * TODO Comment method
-     * 
-     */
-    protected void start() {
-	int minuteExercise = (Integer) this.minuteExerciseSpinner
-	        .getSelectedItem();
-	int secondExercise = (Integer) this.secondExerciseSpinner
-	        .getSelectedItem();
-	int minuteRecovery = (Integer) this.minuteRecoverySpinner
-	        .getSelectedItem();
-	int secondRecovery = (Integer) this.secondRecoverySpinner
-	        .getSelectedItem();
-	int minuteDelay = (Integer) this.minuteDelaySpinner.getSelectedItem();
-	int secondDelay = (Integer) this.secondDelaySpinner.getSelectedItem();
-
-	int exercise = (minuteExercise*60)+ secondExercise;
-	int recovery = (minuteRecovery*60)+ secondRecovery;
-	int delay = (minuteDelay*60)+ secondDelay;
+    private void start() {
+	saveTime();
 	
+
 	Toast mToast;
 	if (exercise == 0 || recovery == 0) {
-	    mToast = Toast.makeText(this, R.string.error_zero,
+	    mToast = Toast.makeText(
+		    this,
+		    getResources().getString(R.string.error_zero,
+		            getResources().getString(R.string.exercise),
+		            getResources().getString(R.string.recovery)),
 		    Toast.LENGTH_LONG);
 	    mToast.show();
 	    return;
@@ -178,12 +162,63 @@ public class AlarmConfiguration extends Activity {
 	    return;
 	}
 	// else
-	Intent intent = new Intent(this, CountDown.class);
+	Intent intent = new Intent(this, CountDownUI.class);
 	intent.putExtra("com.xqvier.muscu.alarm.Exercise", exercise);
 	intent.putExtra("com.xqvier.muscu.alarm.Recovery", recovery);
 	intent.putExtra("com.xqvier.muscu.alarm.Delay", delay);
 	intent.putExtra("com.xqvier.muscu.alarm.Beep", uriBeep);
 	startActivity(intent);
+    }
+    /* (non-Javadoc)
+     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    }
+
+    /**
+     * TODO Comment method
+     * 
+     */
+    private void saveTime() {
+	
+	int minuteExercise = (Integer) this.minuteExerciseSpinner
+        .getSelectedItem();
+	int secondExercise = (Integer) this.secondExerciseSpinner
+	        .getSelectedItem();
+	int minuteRecovery = (Integer) this.minuteRecoverySpinner
+	        .getSelectedItem();
+	int secondRecovery = (Integer) this.secondRecoverySpinner
+	        .getSelectedItem();
+	int minuteDelay = (Integer) this.minuteDelaySpinner.getSelectedItem();
+	int secondDelay = (Integer) this.secondDelaySpinner.getSelectedItem();
+
+	exercise = (minuteExercise * 60) + secondExercise;
+	recovery = (minuteRecovery * 60) + secondRecovery;
+	delay = (minuteDelay * 60) + secondDelay;
+	
+	SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+	editor.putInt("delay",delay);
+	editor.putInt("exercise", exercise);
+	editor.putInt("recovery", recovery);
+	editor.putString("ringtone", uriBeep.toString());
+	editor.commit();
+	/*try {
+	    FileOutputStream fos = openFileOutput(settingsFile, MODE_PRIVATE);
+	    fos.write(delay);
+	    fos.write(recovery);
+	    fos.write(exercise);
+	    
+        } catch (FileNotFoundException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+        } catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+        }*/
+        /*settings.edit().putInt("minute", this.minute);
+        settings.edit().putInt("second", this.second);
+        settings.edit().commit();*/
     }
 
     /**
@@ -191,8 +226,25 @@ public class AlarmConfiguration extends Activity {
      * 
      */
     private void restoreTime() {
-	this.minute = settings.getInt("minute", 0);
-	this.second = settings.getInt("second", 0);
+	delay = settings.getInt("delay", 0);
+	recovery = settings.getInt("recovery", 0);
+	exercise = settings.getInt("exercise", 0);
+	uriBeep = Uri.parse(settings.getString("ringtone", ""));
+	System.out.println(delay + " " + recovery + " " + exercise + " " + uriBeep);
+	minuteExerciseSpinner.setSelection(exercise/60);
+	secondExerciseSpinner.setSelection(exercise%60);
+	minuteRecoverySpinner.setSelection(recovery/60);
+	secondRecoverySpinner.setSelection(recovery%60);
+	minuteDelaySpinner.setSelection(delay/60);
+	secondDelaySpinner.setSelection(delay%60);
+	
+	selectBeepButton
+	    .setText(selectBeepButton.getText()
+	            + " : "
+	            + RingtoneManager.getRingtone(this, uriBeep)
+	                    .getTitle(this));
+	
+	
     }
 
     /*
@@ -208,7 +260,7 @@ public class AlarmConfiguration extends Activity {
 		    RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
 	    selectBeepButton
 		    .setText(selectBeepButton.getText()
-		            + " "
+		            + " : "
 		            + RingtoneManager.getRingtone(this, uriBeep)
 		                    .getTitle(this));
 	}

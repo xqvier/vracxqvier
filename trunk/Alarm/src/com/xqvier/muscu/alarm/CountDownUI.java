@@ -23,7 +23,7 @@ import com.xqvier.muscu.R;
  * @author xMourgues
  * @version
  */
-public class CountDown extends Activity {
+public class CountDownUI extends Activity {
     private static final short STATUS_PREPARE = 0;
 
     private static final short STATUS_RECOVERY = 1;
@@ -61,16 +61,10 @@ public class CountDown extends Activity {
     private ViewSwitcher switcher;
 
     /** TODO Comment attribute */
-    private CountDownTimer timer;
-
-    /** TODO Comment attribute */
-    private long currentPos = 0;
+    private int currentPos = 0;
 
     /** TODO Comment attribute */
     private int count = 0;
-
-    /** TODO Comment attribute */
-    private CharSequence countText;
 
     /** TODO Comment attribute */
     private TextView statusText;
@@ -79,7 +73,13 @@ public class CountDown extends Activity {
 
     private short status;
 
-    private boolean timerFinished;
+    private String statusExercise;
+
+    private String statusPrepare;
+
+    private String statusRecovery;
+
+    private CountDownService timer;
 
     /*
      * (non-Javadoc)
@@ -94,11 +94,11 @@ public class CountDown extends Activity {
 
 	time = (TextView) findViewById(R.id.timerText);
 	countTextView = (TextView) findViewById(R.id.count);
-	countText = countTextView.getText();
 	stopButton = (Button) findViewById(R.id.stopButton);
 	switcher = (ViewSwitcher) findViewById(R.id.buttonSwitcher);
 	restartButton = (Button) findViewById(R.id.restartButton);
 	resumeButton = (Button) findViewById(R.id.resumeButton);
+	statusText = (TextView) findViewById(R.id.status);
 	exercise = getIntent().getExtras().getInt(
 	        "com.xqvier.muscu.alarm.Exercise");
 	recovery = getIntent().getExtras().getInt(
@@ -107,10 +107,15 @@ public class CountDown extends Activity {
 	beep = RingtoneManager.getRingtone(this, (Uri) getIntent().getExtras()
 	        .get("com.xqvier.muscu.alarm.Beep"));
 
+	statusExercise = getResources().getString(R.string.statusExercise);
+	statusPrepare = getResources().getString(R.string.statusPrepare);
+	statusRecovery = getResources().getString(R.string.statusRecovery);
+
 	stopButton.setOnClickListener(new View.OnClickListener() {
 
 	    @Override
 	    public void onClick(View v) {
+		switcher.showNext();
 		stop();
 	    }
 	});
@@ -118,6 +123,7 @@ public class CountDown extends Activity {
 
 	    @Override
 	    public void onClick(View v) {
+		switcher.showNext();
 		restart();
 
 	    }
@@ -127,20 +133,12 @@ public class CountDown extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		switcher.showNext();
-		play(currentPos - 1000);
+		resume();
 
 	    }
 	});
 	status = STATUS_PREPARE;
-	timerFinished = false;
-	play(delay * 1000);
-	/*
-	 * while(true){ if(timerFinished){ timerFinished=false; if(status ==
-	 * STATUS_PREPARE || status == STATUS_RECOVERY){ status =
-	 * STATUS_EXERCISE; play(exercise*1000); } else { status =
-	 * STATUS_RECOVERY; play(recovery*1000); } } }
-	 */
-	// start();
+	play();
 
     }
 
@@ -164,52 +162,21 @@ public class CountDown extends Activity {
      * 
      */
     private void updateDisplay() {
-	time.setText(pad((currentPos / 1000) / 60) + ":"
-	        + pad((currentPos / 1000) % 60));
-	String text = null;
+	time.setText(pad(currentPos / 60) + ":" + pad(currentPos % 60));
+	CharSequence text = "CA PASSE PAS DANS LES IF???";
 	if (status == STATUS_EXERCISE) {
-	    text = getResources().getString(R.string.statusExercise);
+	    text = statusExercise;
 	} else if (status == STATUS_PREPARE) {
-	    text = getResources().getString(R.string.statusPrepare);
+	    text = statusPrepare;
 	} else {
-	    text = getResources().getString(R.string.statusRecovery);
+	    text = statusRecovery;
 	}
 	if (!running) {
-	    text += " (" + getResources().getString(R.string.pause) + ")";
+	    text = text + " (" + getResources().getString(R.string.pause) + ")";
 	}
 	statusText.setText(text);
-	countTextView.setText(countText + " " + Integer.toString(count));
-    }
-
-    /**
-     * TODO Comment method
-     * 
-     * @param lo
-     * 
-     * @param currentPos2
-     */
-    protected void play(long lo) {
-
-	timer = new CountDownTimer(lo + 1000, 1000) {
-
-	    @Override
-	    public void onTick(long millisUntilFinished) {
-		currentPos = millisUntilFinished;
-		updateDisplay();
-	    }
-
-	    @Override
-	    public void onFinish() {
-
-		currentPos = 0;
-		count++;
-		updateDisplay();
-		beep.play();
-		timerFinished = true;
-	    }
-	};
-	running = true;
-	timer.start();
+	countTextView.setText(getResources().getString(R.string.count) + " "
+	        + Integer.toString(count));
     }
 
     /**
@@ -218,17 +185,109 @@ public class CountDown extends Activity {
      * @param l
      * @return
      */
-    protected String pad(long l) {
+    private String pad(long l) {
 	return l < 10 ? "0" + l : Long.toString(l);
+    }
+
+    private class CountDownService extends Thread {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#interrupt()
+	 */
+	@Override
+	public void interrupt() {
+	    timer.cancel();
+	    super.interrupt();
+	}
+
+	private CountDownTimer timer;
+
+	/**
+	 * TODO Comment constructor
+	 * 
+	 */
+	public CountDownService(int sec) {
+	    timer = new CountDownTimer(sec * 1000, 1000) {
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+		    currentPos = (int) (millisUntilFinished / 1000);
+		    updateDisplay();
+		}
+
+		@Override
+		public void onFinish() {
+
+		    currentPos = 0;
+		    if (status == STATUS_PREPARE || status == STATUS_RECOVERY) {
+			status = STATUS_EXERCISE;
+		    } else {
+			status = STATUS_RECOVERY;
+			count++;
+		    }
+
+		    beep.play();
+		    play();
+		    updateDisplay();
+		}
+	    };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
+	    timer.start();
+	}
+
+    }
+
+    /**
+     * TODO Comment method
+     * 
+     * @param currentPos2
+     */
+    private void play() {
+	running = true;
+	if (status == STATUS_PREPARE) {
+	    if(delay!=0){
+		timer = new CountDownService(delay);
+		timer.start();
+	    } else {
+		status = STATUS_EXERCISE;
+	    }
+	}
+	if (status == STATUS_EXERCISE) {
+	    timer = new CountDownService(exercise);
+	    timer.start();
+	}
+	if (status == STATUS_RECOVERY) {
+	    timer = new CountDownService(recovery);
+	    timer.start();
+	}
     }
 
     /**
      * TODO Comment method
      * 
      */
-    protected void restart() {
-	switcher.showNext();
-	// play(1000 * ((minuteExercise * 60) + secondExercise));
+    private void resume() {
+	timer = new CountDownService(currentPos);
+	timer.start();
+
+    }
+
+    /**
+     * TODO Comment method
+     * 
+     */
+    private void restart() {
+	status = STATUS_PREPARE;
+	play();
     }
 
     /**
@@ -237,8 +296,7 @@ public class CountDown extends Activity {
      */
     private void stop() {
 	running = false;
-	timer.cancel();
-	switcher.showNext();
+	timer.interrupt();
 	updateDisplay();
     }
 

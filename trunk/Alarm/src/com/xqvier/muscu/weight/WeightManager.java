@@ -66,7 +66,7 @@ public class WeightManager extends Activity {
      *
      */
     protected void showStat() {
-	Intent intent = new Intent(this, Stats.class);
+	Intent intent = new Intent(this, WeightStats.class);
 	startActivity(intent);
 	
     }

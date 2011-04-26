@@ -14,5 +14,5 @@
 	<Button android:id="@+id/saveButton" android:text="@string/save_button"
 		android:layout_width="fill_parent" android:layout_height="wrap_content" />
 	<Button android:id="@+id/showStatButton" android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:text="@string/show_stats_button" />
+		android:layout_width="fill_parent" android:text="@string/stats_button" />
 </LinearLayout>

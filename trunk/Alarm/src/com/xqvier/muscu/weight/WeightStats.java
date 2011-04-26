@@ -1,5 +1,5 @@
 /*
- * Stats.java	18 avr. 2011
+ * WeightStats.java	18 avr. 2011
  * xMourgues 
  */
 package com.xqvier.muscu.weight;
@@ -15,7 +15,7 @@ import android.os.Bundle;
  * @author xMourgues
  * @version 
  */
-public class Stats extends Activity {
+public class WeightStats extends Activity {
 
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
