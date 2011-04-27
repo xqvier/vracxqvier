@@ -10,15 +10,18 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.xqvier.muscu.DBAdapter;
+import com.xqvier.muscu.Exercise;
 import com.xqvier.muscu.R;
 
 /**
- * TODO Comment class
+ * Activité pour l'affichage du compte a rebours
  * 
  * @author xMourgues
  * @version
@@ -30,55 +33,49 @@ public class CountDownUI extends Activity {
 
     private static final short STATUS_EXERCISE = 2;
 
-    /** TODO Comment attribute */
-    private int exercise;
+    /** Objet d'exercice en cours */
+    Exercise exo;
 
-    /** TODO Comment attribute */
-    private int recovery;
-
-    /** TODO Comment attribute */
-    private int delay;
-
-    /** TODO Comment attribute */
+    /** la sonnerie utilisée entre les timers */
     private Ringtone beep;
 
-    /** TODO Comment attribute */
+    /** Widget - Texte de représentation du défilement du temps */
     private TextView time;
 
-    /** TODO Comment attribute */
+    /** Widget - Text de réprésentation du nombre d'exercice effectué */
     private TextView countTextView;
 
-    /** TODO Comment attribute */
+    /** Widget - Bouton d'arret du timer */
     private Button stopButton;
 
-    /** TODO Comment attribute */
+    /** Widget - Bouton de redémarrage du timer */
     private Button restartButton;
 
-    /** TODO Comment attribute */
+    /** Widget - Bouton de reprise du timer */
     private Button resumeButton;
 
-    /** TODO Comment attribute */
+    /**
+     * Widget - Switcher permettant de switcher entre les boutons (stop et
+     * restart/resume)
+     */
     private ViewSwitcher switcher;
 
-    /** TODO Comment attribute */
+    /** Position du timer actuelle pour la reprise */
     private int currentPos = 0;
 
-    /** TODO Comment attribute */
-    private int count = 0;
-
-    /** TODO Comment attribute */
+    /**
+     * Widget - Text représentant le status du timer (pause, preparation,
+     * recuperation, exercice en cours)
+     */
     private TextView statusText;
 
+    /** booleen indiquant si le timer est en pause ou non */
     private boolean running;
 
+    /** indicateur de status du timer (preparation, recuperation, exercice) */
     private short status;
 
-    private String statusExercise;
-
-    private String statusPrepare;
-
-    private String statusRecovery;
-
+    /** Thread du timer */
     private CountDownService timer;
 
     /*
@@ -88,7 +85,6 @@ public class CountDownUI extends Activity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-	// TODO Auto-generated method stub
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.timer);
 
@@ -99,17 +95,12 @@ public class CountDownUI extends Activity {
 	restartButton = (Button) findViewById(R.id.restartButton);
 	resumeButton = (Button) findViewById(R.id.resumeButton);
 	statusText = (TextView) findViewById(R.id.status);
-	exercise = getIntent().getExtras().getInt(
+
+	exo = (Exercise) getIntent().getExtras().get(
 	        "com.xqvier.muscu.alarm.Exercise");
-	recovery = getIntent().getExtras().getInt(
-	        "com.xqvier.muscu.alarm.Recovery");
-	delay = getIntent().getExtras().getInt("com.xqvier.muscu.alarm.Delay");
+	Log.d("CountDown", exo.toString());
 	beep = RingtoneManager.getRingtone(this, (Uri) getIntent().getExtras()
 	        .get("com.xqvier.muscu.alarm.Beep"));
-
-	statusExercise = getResources().getString(R.string.statusExercise);
-	statusPrepare = getResources().getString(R.string.statusPrepare);
-	statusRecovery = getResources().getString(R.string.statusRecovery);
 
 	stopButton.setOnClickListener(new View.OnClickListener() {
 
@@ -142,47 +133,47 @@ public class CountDownUI extends Activity {
 
     }
 
-    /**
-     * TODO Comment method
+    /*
+     * (non-Javadoc)
      * 
+     * @see android.app.Activity#onDestroy()
      */
-    // private void start() {
-    //
-    // switcher.showNext();
-    // if (minuteDelay != 0 || secondDelay != 0) {
-    // count--;
-    // play(1000 * ((minuteDelay * 60) + secondDelay));
-    // } else {
-    // play(1000 * ((minuteExercise * 60) + secondExercise));
-    // }
-    // }
+    @Override
+    protected void onDestroy() {
+	super.onDestroy();
+	DBAdapter db = new DBAdapter(this);
+	db.open();
+	db.insertExercise(exo);
+	db.close();
+    }
 
     /**
-     * TODO Comment method
-     * 
+     * Mise a jour de l'affichage dynamique
      */
     private void updateDisplay() {
 	time.setText(pad(currentPos / 60) + ":" + pad(currentPos % 60));
-	CharSequence text = "CA PASSE PAS DANS LES IF???";
+	CharSequence text;
 	if (status == STATUS_EXERCISE) {
-	    text = statusExercise;
+	    text = getResources().getString(R.string.statusExercise);
 	} else if (status == STATUS_PREPARE) {
-	    text = statusPrepare;
+	    text = getResources().getString(R.string.statusPrepare);
 	} else {
-	    text = statusRecovery;
+	    text = getResources().getString(R.string.statusRecovery);
 	}
 	if (!running) {
 	    text = text + " (" + getResources().getString(R.string.pause) + ")";
 	}
 	statusText.setText(text);
 	countTextView.setText(getResources().getString(R.string.count) + " "
-	        + Integer.toString(count));
+	        + Integer.toString(exo.getCount()));
     }
 
     /**
-     * TODO Comment method
+     * rajoute un zero devant un nombre à un chiffre pour le mettre sur 2
+     * chiffre pour l'affichage
      * 
      * @param l
+     *            le nombre à "pader"
      * @return
      */
     private String pad(long l) {
@@ -204,8 +195,10 @@ public class CountDownUI extends Activity {
 	private CountDownTimer timer;
 
 	/**
-	 * TODO Comment constructor
+	 * Constructeur du Thread de compte à rebours
 	 * 
+	 * @param sec
+	 *            le nombre de seconde à décompter
 	 */
 	public CountDownService(int sec) {
 	    timer = new CountDownTimer(sec * 1000, 1000) {
@@ -224,7 +217,7 @@ public class CountDownUI extends Activity {
 			status = STATUS_EXERCISE;
 		    } else {
 			status = STATUS_RECOVERY;
-			count++;
+			exo.incrementCount();
 		    }
 
 		    beep.play();
@@ -247,42 +240,41 @@ public class CountDownUI extends Activity {
     }
 
     /**
-     * TODO Comment method
-     * 
-     * @param currentPos2
+     * Lance le thread qu'il faut pour le compte a rebours
      */
     private void play() {
 	running = true;
 	if (status == STATUS_PREPARE) {
-	    if(delay!=0){
-		timer = new CountDownService(delay);
+	    if (exo.getDelay() != 0) {
+		timer = new CountDownService(exo.getDelay());
 		timer.start();
 	    } else {
 		status = STATUS_EXERCISE;
 	    }
 	}
 	if (status == STATUS_EXERCISE) {
-	    timer = new CountDownService(exercise);
+	    timer = new CountDownService(exo.getTime());
 	    timer.start();
 	}
 	if (status == STATUS_RECOVERY) {
-	    timer = new CountDownService(recovery);
+	    timer = new CountDownService(exo.getRecovery());
 	    timer.start();
 	}
     }
 
     /**
-     * TODO Comment method
+     * Relance le compte a rebours de l'endroit ou il a été stopé
      * 
      */
     private void resume() {
+	running = true;
 	timer = new CountDownService(currentPos);
 	timer.start();
 
     }
 
     /**
-     * TODO Comment method
+     * Relance le compte a rebours depuis le début (délai compris)
      * 
      */
     private void restart() {
@@ -291,18 +283,11 @@ public class CountDownUI extends Activity {
     }
 
     /**
-     * TODO Comment method
-     * 
+     * Arrete le compte a rebours
      */
     private void stop() {
 	running = false;
 	timer.interrupt();
 	updateDisplay();
-    }
-
-    @Override
-    protected void onDestroy() {
-	// TODO Auto-generated method stub
-	super.onDestroy();
     }
 }

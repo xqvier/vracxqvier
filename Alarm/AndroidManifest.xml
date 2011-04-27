@@ -16,7 +16,7 @@
 			android:label="@string/alarm_name" />
 		<activity android:name="com.xqvier.muscu.alarm.CountDownUI"
 			android:label="@string/timer_name" />
-		<activity android:name="com.xqvier.muscu.alarm.AlarmStats"
+		<activity android:name="com.xqvier.muscu.alarm.ExerciseStats"
 			android:label="@string/stats" />
 		<activity android:name="com.xqvier.muscu.weight.WeightManager"
 			android:label="@string/weight_name" />
