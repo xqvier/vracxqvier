@@ -26,4 +26,9 @@
     <string name="statusRecovery">Recupération</string>
     <string name="pause">Pause</string>
     <string name="statusPrepare">Préparation</string>
+    <string name="exercise_name_column">Nom</string>
+    <string name="exercise_time_column">Temps</string>
+    <string name="exercise_recovery_column">Récup</string>
+    <string name="exercise_count_column">Série(s)</string>
+    <string name="error_exercise_notfound">Aucun exercice trouvé</string>
 </resources>

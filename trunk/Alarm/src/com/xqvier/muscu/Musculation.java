@@ -5,8 +5,6 @@
 package com.xqvier.muscu;
 
 import com.xqvier.muscu.alarm.AlarmConfiguration;
-import com.xqvier.muscu.weight.WeightManager;
-
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -14,7 +12,7 @@ import android.os.Bundle;
 import android.widget.TabHost;
 
 /**
- * TODO Comment class
+ * Activité maitre de l'application (point d'entrée principal)
  * 
  * @author xMourgues
  * @version
@@ -47,7 +45,7 @@ public class Musculation extends TabActivity {
 	tabHost.addTab(spec);
 
 	// Onglet Poids
-	intent = new Intent(this, WeightManager.class);
+	/*intent = new Intent(this, WeightManager.class);
 
 	spec = tabHost
 	        .newTabSpec("weightTab")
@@ -56,6 +54,6 @@ public class Musculation extends TabActivity {
 	        .setContent(intent);
 	tabHost.addTab(spec);
 	
-	tabHost.setCurrentTab(0);
+	tabHost.setCurrentTab(0);*/
     }
 }
