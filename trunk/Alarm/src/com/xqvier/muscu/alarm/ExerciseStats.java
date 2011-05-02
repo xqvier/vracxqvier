@@ -5,17 +5,21 @@
 package com.xqvier.muscu.alarm;
 
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.xqvier.muscu.DBAdapter;
 import com.xqvier.muscu.Exercise;
 import com.xqvier.muscu.R;
 import com.xqvier.muscu.widget.ExerciseNameField;
+import com.xqvier.muscu.widget.ExerciseRow;
 
 /**
  * Activité affichant les statistiques des exercices
@@ -43,18 +47,20 @@ public class ExerciseStats extends Activity {
 	setContentView(R.layout.exercise_stat);
 
 	tab = (TableLayout) findViewById(R.id.tabLayout);
+	if (tab == null) {
+	    System.out.println("ExerciseStats.onCreate():tab==null");
+	}
 	searchBar = (ExerciseNameField) findViewById(R.id.exerciseNameAuto);
 
-	searchBar
-	        .setOnEditorActionListener(new TextView.OnEditorActionListener() {
+	searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+	    
+	    @Override
+	    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		updateDisplay();
+		return true;
+	    }
+	});
 
-		    @Override
-		    public boolean onEditorAction(TextView v, int actionId,
-		            KeyEvent event) {
-		        updateDisplay();
-		        return true;
-		    }
-	        });
 	updateDisplay();
     }
 
@@ -74,19 +80,37 @@ public class ExerciseStats extends Activity {
 	    exos = db.selectExercise(text);
 	}
 	db.close();
-	TableRow tr;
 	TextView tv;
 	if (exos == null) {
-	    tr = new TableRow(this);
+	    System.out.println("ExerciseStats.updateDisplay():exos==null");
+	    // tr = new TableRow(this);
 	    tv = new TextView(this);
 	    tv.setText(R.string.error_exercise_notfound);
-	    tr.addView(tv);
-	    tab.addView(tr);
+	    // tr.addView(tv);
+	    tab.addView(tv);
 	} else {
+	    ExerciseRow tr;
+	    RelativeLayout rl;
+	    Button deleteButton;
 	    for (int i = 0; i < exos.size(); i++) {
 		Exercise exo;
 		exo = exos.get(i);
-		tr = new TableRow(this);
+		tr = new ExerciseRow(this);
+		deleteButton = ((ExerciseRow) tr).getDeleteButton();
+		deleteButton.setOnClickListener(new View.OnClickListener() {
+
+		    @Override
+		    public void onClick(View v) {
+			delete(((ExerciseRow) ((Button) v).getParent())
+			        .getExerciseId());
+		    }
+
+		});
+		tv = new TextView(this);
+		tv.setText(Integer.toString(exo.getId()));
+		tv.setTag("id");
+		tv.setVisibility(View.GONE);
+		tr.addView(tv);
 		tv = new TextView(this);
 		tv.setText(exo.getName());
 		tr.addView(tv);
@@ -96,12 +120,31 @@ public class ExerciseStats extends Activity {
 		tv = new TextView(this);
 		tv.setText(Integer.toString(exo.getRecovery()));
 		tr.addView(tv);
+		rl = new RelativeLayout(this);
 		tv = new TextView(this);
 		tv.setText(Integer.toString(exo.getCount()));
-		tr.addView(tv);
+		rl.addView(tv);
+		rl.addView(deleteButton);
+		tr.addView(rl);
+		// tr.addView(tv);
 		tab.addView(tr);
+		tr.setMinimumWidth(tab.getMeasuredWidth());
 	    }
 	}
+    }
+
+    /**
+     * TODO Comment method
+     * 
+     * @param exerciseId
+     */
+    private void delete(int exerciseId) {
+	System.out.println("deleting id " + exerciseId);
+	DBAdapter db = new DBAdapter(this);
+	db.open();
+	db.deleteExercise(exerciseId);
+	db.close();
+	updateDisplay();
     }
 
 }

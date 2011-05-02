@@ -30,6 +30,7 @@ public class ExerciseNameField extends AutoCompleteTextView {
      */
     public ExerciseNameField(Context context) {
 	super(context);
+	
 	this.context = context;
 	init();
 
@@ -46,6 +47,7 @@ public class ExerciseNameField extends AutoCompleteTextView {
 	super(context, attrs, defStyle);
 
 	this.context = context;
+	init();
 
     }
 
@@ -62,7 +64,7 @@ public class ExerciseNameField extends AutoCompleteTextView {
 	init();
 
     }
-
+    
     private void init() {
 	DBAdapter db = new DBAdapter(context);
 	db.open();
