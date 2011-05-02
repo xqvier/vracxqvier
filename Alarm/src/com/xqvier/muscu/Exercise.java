@@ -16,6 +16,14 @@ import android.os.Parcelable;
  * @version
  */
 public class Exercise implements Parcelable {
+
+    private String name;
+    private Date date;
+    private int id;
+    private int time;
+    private int recovery;
+    private int delay;
+    private int count;
     /**
      * Constructeur multichamps
      * 
@@ -32,9 +40,10 @@ public class Exercise implements Parcelable {
      * @param count
      *            le nombre de série
      */
-    public Exercise(String name, Date date, int time, int recovery, int delay,
+    public Exercise(int id, String name, Date date, int time, int recovery, int delay,
 	    int count) {
 	super();
+	this.id = id;
 	this.name = name;
 	this.date = date;
 	this.time = time;
@@ -42,13 +51,6 @@ public class Exercise implements Parcelable {
 	this.delay = delay;
 	this.count = count;
     }
-
-    private String name;
-    private Date date;
-    private int time;
-    private int recovery;
-    private int delay;
-    private int count;
 
     public Exercise(String name, Date date, int exercise, int recovery,
 	    int delay) {
@@ -99,6 +101,20 @@ public class Exercise implements Parcelable {
     }
 
     /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * @return the name
      */
     public String getName() {
@@ -129,21 +145,6 @@ public class Exercise implements Parcelable {
     }
 
     /**
-     * @return the recovery
-     */
-    public int getRecovery() {
-	return recovery;
-    }
-
-    /**
-     * @param recovery
-     *            the recovery to set
-     */
-    public void setRecovery(int recovery) {
-	this.recovery = recovery;
-    }
-
-    /**
      * @return the time
      */
     public int getTime() {
@@ -158,36 +159,19 @@ public class Exercise implements Parcelable {
 	this.time = time;
     }
 
-    public void incrementCount() {
-	this.count++;
+    /**
+     * @return the recovery
+     */
+    public int getRecovery() {
+        return recovery;
     }
 
     /**
-     * @return the count
+     * @param recovery
+     *            the recovery to set
      */
-    public int getCount() {
-        return count;
-    }
-
-    /**
-     * @param count
-     *            the count to set
-     */
-    public void setCount(int count) {
-	this.count = count;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return "Exercise [name=" + name + ", date=" + date + ", count=" + count
-	        + ", delay=" + delay + ", recovery=" + recovery + ", time="
-	        + time + ", getClass()=" + getClass() + ", hashCode()="
-	        + hashCode() + ", toString()=" + super.toString() + "]";
+    public void setRecovery(int recovery) {
+        this.recovery = recovery;
     }
 
     /**
@@ -203,6 +187,38 @@ public class Exercise implements Parcelable {
      */
     public int getDelay() {
 	return delay;
+    }
+
+    public void incrementCount() {
+        this.count++;
+    }
+
+    /**
+     * @return the count
+     */
+    public int getCount() {
+        return count;
+    }
+
+    /**
+     * @param count
+     *            the count to set
+     */
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Exercise [name=" + name + ", date=" + date + ", count=" + count
+                + ", delay=" + delay + ", recovery=" + recovery + ", time="
+                + time + ", getClass()=" + getClass() + ", hashCode()="
+                + hashCode() + ", toString()=" + super.toString() + "]";
     }
 
     /*

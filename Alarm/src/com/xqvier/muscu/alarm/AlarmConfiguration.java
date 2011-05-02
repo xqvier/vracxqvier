@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -56,9 +55,6 @@ public class AlarmConfiguration extends Activity {
     /** Widget - Button pour demarrer le timer */
     private Button startButton;
 
-    /** Widget - Button pour afficher les stats */
-    private Button statButton;
-
     /** Exercice en configuration */
     private Exercise exo;
 
@@ -85,18 +81,16 @@ public class AlarmConfiguration extends Activity {
 	secondDelaySpinner = (Spinner) findViewById(R.id.secondDelaySpinner);
 	selectBeepButton = (Button) findViewById(R.id.selectBeepButton);
 	startButton = (Button) findViewById(R.id.startButton);
-	statButton = (Button) findViewById(R.id.alarmStatButton);
 
 	nameField
 	        .setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
+		    
 		    @Override
-		    public boolean onEditorAction(TextView v, int actionId,
-		            KeyEvent event) {
-		        updateExercise();
-		        updateDisplay();
-		        return true;
-		    }
+		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+			updateExercise();
+			updateDisplay();
+			return true;
+                    }
 	        });
 	selectBeepButton.setOnClickListener(new View.OnClickListener() {
 
@@ -110,13 +104,6 @@ public class AlarmConfiguration extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		start();
-	    }
-	});
-	statButton.setOnClickListener(new View.OnClickListener() {
-
-	    @Override
-	    public void onClick(View v) {
-		show_stat();
 	    }
 	});
 
@@ -175,14 +162,6 @@ public class AlarmConfiguration extends Activity {
     }
 
     /**
-     * Lance l'activité pour montrer les stats
-     */
-    private void show_stat() {
-	Intent intent = new Intent(this, ExerciseStats.class);
-	startActivity(intent);
-    }
-
-    /**
      * méthode pour la séléction de la sonnerie déclenchée entre chaque timer
      */
     private void selectBeep() {
@@ -227,22 +206,11 @@ public class AlarmConfiguration extends Activity {
 	    return;
 	}
 	// else
-	Intent intent = new Intent(this, CountDownUI.class);
 	exo.setDate(Calendar.getInstance().getTime());
-
-	Log.d("alarmConf", exo.toString());
+	Intent intent = new Intent(this, CountDownUI.class);
 	intent.putExtra("com.xqvier.muscu.alarm.Exercise", exo);
 	intent.putExtra("com.xqvier.muscu.alarm.Beep", uriBeep);
 	startActivity(intent);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
     }
 
     /**

@@ -79,10 +79,20 @@ public class DBAdapter {
 	return db.insert(DATABASE_TABLE, null, cv);
     }
 
+    /**
+     * TODO Comment method
+     * 
+     * @param exerciseId
+     * @return 
+     */
+    public int deleteExercise(int exerciseId) {
+	return db.delete(DATABASE_TABLE, KEY_ROWID + "=" + exerciseId, null);
+    }
+
     public ArrayList<Exercise> selectAllExercise() {
-	Cursor mCursor = db.query(DATABASE_TABLE, new String[] { KEY_NAME,
-	        KEY_DATE, KEY_TIME, KEY_RECOVERY, KEY_DELAY, KEY_COUNT }, null,
-	        null, null, null, null);
+	Cursor mCursor = db.query(DATABASE_TABLE, new String[] { KEY_ROWID,
+	        KEY_NAME, KEY_DATE, KEY_TIME, KEY_RECOVERY, KEY_DELAY,
+	        KEY_COUNT }, null, null, null, null, null);
 	if (mCursor == null) {
 	    return null;
 	}
@@ -90,11 +100,13 @@ public class DBAdapter {
 	Exercise exo;
 	for (int i = 0; i < mCursor.getCount(); i++) {
 	    mCursor.moveToPosition(i);
-	    exo = new Exercise(mCursor.getString(mCursor
-		    .getColumnIndex(KEY_NAME)), Date.valueOf(mCursor
-		    .getString(mCursor.getColumnIndex(KEY_DATE))),
-		    mCursor.getInt(mCursor.getColumnIndex(KEY_TIME)),
-		    mCursor.getInt(mCursor.getColumnIndex(KEY_RECOVERY)),
+	    exo = new Exercise(
+		    mCursor.getInt(mCursor.getColumnIndex(KEY_ROWID)),
+		    mCursor.getString(mCursor.getColumnIndex(KEY_NAME)),
+		    Date.valueOf(mCursor.getString(mCursor
+		            .getColumnIndex(KEY_DATE))), mCursor.getInt(mCursor
+		            .getColumnIndex(KEY_TIME)), mCursor.getInt(mCursor
+		            .getColumnIndex(KEY_RECOVERY)),
 		    mCursor.getInt(mCursor.getColumnIndex(KEY_DELAY)),
 		    mCursor.getInt(mCursor.getColumnIndex(KEY_COUNT)));
 	    exos.add(exo);
@@ -132,9 +144,10 @@ public class DBAdapter {
      */
     public Exercise selectLastExercise(String name) {
 	Exercise exo;
-	Cursor mCursor = db.query(DATABASE_TABLE, new String[] { KEY_NAME,
-	        KEY_DATE, KEY_TIME, KEY_RECOVERY, KEY_DELAY, KEY_COUNT },
-	        KEY_NAME + "='" + name + "'", null, null, null, null);
+	Cursor mCursor = db.query(DATABASE_TABLE, new String[] { KEY_ROWID,
+	        KEY_NAME, KEY_DATE, KEY_TIME, KEY_RECOVERY, KEY_DELAY,
+	        KEY_COUNT }, KEY_NAME + "='" + name + "'", null, null, null,
+	        null);
 	if (mCursor == null) {
 	    return null;
 	}
@@ -142,11 +155,13 @@ public class DBAdapter {
 	    return null;
 	}
 	exo = new Exercise(
+	        mCursor.getInt(mCursor.getColumnIndex(KEY_ROWID)),
 	        mCursor.getString(mCursor.getColumnIndex(KEY_NAME)),
 	        Date.valueOf(mCursor.getString(mCursor.getColumnIndex(KEY_DATE))),
 	        mCursor.getInt(mCursor.getColumnIndex(KEY_TIME)), mCursor
 	                .getInt(mCursor.getColumnIndex(KEY_RECOVERY)), mCursor
-	                .getInt(mCursor.getColumnIndex(KEY_DELAY)));
+	                .getInt(mCursor.getColumnIndex(KEY_DELAY)), mCursor
+	                .getInt(mCursor.getColumnIndex(KEY_COUNT)));
 	mCursor.close();
 	return exo;
     }
@@ -160,21 +175,24 @@ public class DBAdapter {
      * @return une liste d'exercice portant le nom demandé
      */
     public ArrayList<Exercise> selectExercise(String name) {
-	Cursor mCursor = db.query(DATABASE_TABLE, new String[] { KEY_NAME,
-	        KEY_DATE, KEY_TIME, KEY_RECOVERY, KEY_DELAY, KEY_COUNT },
-	        KEY_NAME + "='" + name + "'", null, null, null, null);
-	if (mCursor == null) {
+	Cursor mCursor = db.query(DATABASE_TABLE, new String[] { KEY_ROWID,
+	        KEY_NAME, KEY_DATE, KEY_TIME, KEY_RECOVERY, KEY_DELAY,
+	        KEY_COUNT }, KEY_NAME + "='" + name + "'", null, null, null,
+	        null);
+	if (mCursor == null || mCursor.getCount()==0) {
 	    return null;
 	}
 	ArrayList<Exercise> exos = new ArrayList<Exercise>();
 	Exercise exo;
 	for (int i = 0; i < mCursor.getCount(); i++) {
 	    mCursor.moveToPosition(i);
-	    exo = new Exercise(mCursor.getString(mCursor
-		    .getColumnIndex(KEY_NAME)), Date.valueOf(mCursor
-		    .getString(mCursor.getColumnIndex(KEY_DATE))),
-		    mCursor.getInt(mCursor.getColumnIndex(KEY_TIME)),
-		    mCursor.getInt(mCursor.getColumnIndex(KEY_RECOVERY)),
+	    exo = new Exercise(
+		    mCursor.getInt(mCursor.getColumnIndex(KEY_ROWID)),
+		    mCursor.getString(mCursor.getColumnIndex(KEY_NAME)),
+		    Date.valueOf(mCursor.getString(mCursor
+		            .getColumnIndex(KEY_DATE))), mCursor.getInt(mCursor
+		            .getColumnIndex(KEY_TIME)), mCursor.getInt(mCursor
+		            .getColumnIndex(KEY_RECOVERY)),
 		    mCursor.getInt(mCursor.getColumnIndex(KEY_DELAY)),
 		    mCursor.getInt(mCursor.getColumnIndex(KEY_COUNT)));
 	    exos.add(exo);
