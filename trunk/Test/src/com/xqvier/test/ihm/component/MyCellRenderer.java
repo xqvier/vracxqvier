@@ -17,7 +17,7 @@ public class MyCellRenderer extends DefaultTableCellRenderer {
 		Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
 				row, column);
 		
-		if(column == 5 && value.equals("")){
+		if(column == table.getColumn("Colonne 5").getModelIndex() && value.equals("")){
 			cell.setBackground(Color.GREEN);
 		} else {
 			cell.setBackground(Color.WHITE);
