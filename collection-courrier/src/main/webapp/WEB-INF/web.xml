@@ -1,0 +1,8 @@
+<web-app>
+	<display-name>CourrierCollection</display-name>
+
+	<mime-mapping>
+		<extension>csv</extension>
+		<mime-type>application/vnd.ms-excel</mime-type>
+	</mime-mapping>
+</web-app>
