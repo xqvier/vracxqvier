@@ -1,20 +1,16 @@
 package com.xqvier.test.iiil;
 
-public class MyNode<E> {
 
+
+public class MyNode<E> {
 	private E value;
 	
 	private MyNode<E> next;
 	
 	private MyNode<E> previous;
-
-	public MyNode(E pValue) {
-		super();
-		this.value = pValue;
-	}
-
-	E getValue() {
-		return value;
+	
+	MyNode(E pValue){
+		value = pValue;
 	}
 
 	MyNode<E> getNext() {
@@ -33,4 +29,13 @@ public class MyNode<E> {
 		this.previous = previous;
 	}
 
+	E getValue() {
+		return value;
+	}
+
+	void setValue(E value) {
+		this.value = value;
+	}
+	
+	
 }
