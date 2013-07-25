@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1374784500785
+Build-Jdk: 1.7.0_09
+Built-By: xqvier
+Bundle-Description: Tranql db2 connector
+Bundle-DocURL: http://tranql.codehaus.org/tranql-connector-db2-common
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: TranQL Vendors, DB2 :: Common
+Bundle-SymbolicName: org.tranql.connector-db2-common
+Bundle-Vendor: Tranql project committers
+Bundle-Version: 1.9.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.tranql.connector.db2;uses:="org.tranql.connector,jav
+ ax.sql,com.ibm.db2.jcc,org.tranql.connector.jdbc";version="1.9.0.SNAPSH
+ OT"
+Implementation-Title: TranQL Vendors, DB2 :: Common
+Implementation-Version: 1.9-SNAPSHOT
+Import-Package: com.ibm.db2.jcc,javax.sql,org.tranql.connector;version="
+ [1.8,2)",org.tranql.connector.jdbc;version="[1.8,2)"
+Tool: Bnd-1.50.0

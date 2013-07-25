@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2004 - 2007, Tranql project contributors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<connector xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"
+    version="1.5">
+
+    <description>
+        A resource adaptor that provides access to a DB2 database with XA transaction support.  The 
+        following properties were taken from the DB2 JCC Driver Documentation located at:
+        
+        http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.doc/ad/cjvjcsup.htm
+        
+    </description>
+    <display-name>TranQL XA Resource Adapter for DB2</display-name>
+
+    <vendor-name>tranql.codehaus.org</vendor-name>
+    <eis-type>JDBC</eis-type>
+    <resourceadapter-version>1.0</resourceadapter-version>
+    <license>
+        <description>
+            Licensed under the Apache License, Version 2.0 (the "License");
+            you may not use this file except in compliance with the License.
+            You may obtain a copy of the License at
+
+               http://www.apache.org/licenses/LICENSE-2.0
+
+            Unless required by applicable law or agreed to in writing, software
+            distributed under the License is distributed on an "AS IS" BASIS,
+            WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+            See the License for the specific language governing permissions and
+            limitations under the License.
+        </description>
+        <license-required>true</license-required>
+    </license>
+    <resourceadapter>
+        <outbound-resourceadapter>
+            <connection-definition>
+                <managedconnectionfactory-class>org.tranql.connector.db2.XAMCF</managedconnectionfactory-class>
+                <config-property>
+                    <description>
+                       Specifies the name for the database server. 
+                       This name is used as the database portion of 
+                       the connection URL.
+                    </description>
+                    <config-property-name>DatabaseName</config-property-name>
+                    <config-property-type>java.lang.String</config-property-type>
+                </config-property>
+                <config-property>
+                    <description>
+                       The name of the userID used to connect to the remote database server.
+                    </description>
+                    <config-property-name>UserName</config-property-name>
+                    <config-property-type>java.lang.String</config-property-type>
+                </config-property>
+                <config-property>
+                    <config-property-name>Password</config-property-name>
+                    <config-property-type>java.lang.String</config-property-type>
+                </config-property>
+                <config-property>
+                    <description>
+                        ServerName is the name / IP address of the host which the DB2 driver
+                        needs to connect to.  There is no default.        
+                    </description>
+                    <config-property-name>ServerName</config-property-name>
+                    <config-property-type>java.lang.String</config-property-type>
+                    <config-property-value>Host name not specified...update ra.xml with correct host name.</config-property-value>
+                </config-property>
+                <config-property>
+                    <description>
+                       Specifies the port number the remote database server is
+                       listening on for incoming connections.  The default for a 
+                       DB2 server is 50000.
+                    </description>
+                    <config-property-name>PortNumber</config-property-name>
+                    <config-property-type>java.lang.Integer</config-property-type>
+                    <config-property-value>50000</config-property-value>
+                </config-property>
+                <config-property>
+                    <description>
+                       The driver type to use for connections made on this datasource.  Possible 
+                       values are 2 or 4.
+                       
+                       Default is Type 4.
+                    </description>
+                    <config-property-name>DriverType</config-property-name>
+                    <config-property-type>java.lang.Integer</config-property-type>
+                    <config-property-value>4</config-property-value>
+                </config-property>
+                <config-property>
+                    <description>
+                       Name of the schema to connect
+                    </description>
+                    <config-property-name>CurrentSQLID</config-property-name>
+                    <config-property-type>java.lang.String</config-property-type>
+                </config-property>
+                <config-property>
+                    <description>
+                       Name of the tracefile to place trace records into.
+                    </description>
+                    <config-property-name>TraceFile</config-property-name>
+                    <config-property-type>java.lang.String</config-property-type>
+                </config-property>
+                <config-property>
+                    <description>
+                        Specifies whether to append to or overwrite the file that 
+                        is specified by the traceFile property. The data type of this 
+                        property is boolean. The 
+                
+                        default is false, which means that the file that is specified 
+                        by the traceFile property is overwritten. 
+                    </description>
+                    <config-property-name>TraceFileAppend</config-property-name>
+                    <config-property-type>java.lang.Boolean</config-property-type>
+                    <config-property-value>false</config-property-value>
+                </config-property>
+                
+                <config-property>
+                    <description>
+                        PreparedStatementCacheSize tells the driver how many prepared statements
+                        should be associated with each connection.  The default is no statement 
+                        caching.
+                    </description>
+                    <config-property-name>PreparedStatementCacheSize</config-property-name>
+                    <config-property-type>java.lang.Integer</config-property-type>
+                    <config-property-value>0</config-property-value>
+                </config-property>
+                
+                <config-property>
+                    <description>
+                        Specifies whether the lock associated with a hold cursor will be downgraded.
+                    </description>
+                    <config-property-name>DowngradeHoldCursorsUnderXa</config-property-name>
+                    <config-property-type>java.lang.Boolean</config-property-type>
+                    <config-property-value>true</config-property-value>
+                </config-property>
+                
+                <config-property>
+                    <description>
+                        resultSetHoldability has two possible values: HOLD_CURSORS_OVER_COMMIT and 
+                        CLOSE_CURSORS_AT_COMMIT. Either of these values can be specified with any
+                        valid combination of resultSetConcurrency and resultSetHoldability. The value
+                        that you set overrides the default holdability for the connection.
+                        
+                        HOLD_CURSORS_OVER_COMMIT = 1
+                        CLOSE_CURSORS_AT_COMMIT  = 2
+                    </description>
+                    <config-property-name>ResultSetHoldability</config-property-name>
+                    <config-property-type>java.lang.Integer</config-property-type>
+                    <config-property-value>1</config-property-value>
+                </config-property>
+                
+                <config-property>
+                    <description>
+                        Valid values are DB2BaseDatSource.YES (1) and DB2BaseDatSource.NO (2). If the
+                         progressiveStreaming property is not specified, the progressiveStreaming value
+                          is DB2BaseDatSource.NOT_SET (0)
+                    </description>
+                    <config-property-name>ProgressiveStreaming</config-property-name>
+                    <config-property-type>java.lang.Integer</config-property-type>
+                    <config-property-value>0</config-property-value>
+                </config-property>
+
+               <config-property>
+                    <description>
+                        Indicates whether streams are fully materialized before they are sent from the
+                         client to a database server. The data type of this property is boolean. The default is false.
+                    </description>
+                    <config-property-name>FullyMaterializeInputStreams</config-property-name>
+                    <config-property-type>java.lang.Boolean</config-property-type>
+                    <config-property-value>false</config-property-value>
+                </config-property>
+                
+                 <config-property>
+                    <description>
+                        Indicates whether the driver retrieves LOB locators for FETCH operations.
+                        The effect of fullyMaterializeLobData depends on whether the database server supports progressive streaming.
+                    </description>
+                    <config-property-name>FullyMaterializeLobData</config-property-name>
+                    <config-property-type>java.lang.Boolean</config-property-type>
+                    <config-property-value>false</config-property-value>
+                </config-property>
+                
+                <connectionfactory-interface>javax.sql.DataSource</connectionfactory-interface>
+                <connectionfactory-impl-class>org.tranql.connector.jdbc.TranqlDataSource</connectionfactory-impl-class>
+                <connection-interface>java.sql.Connection</connection-interface>
+                <connection-impl-class>org.tranql.connector.jdbc.ConnectionHandle</connection-impl-class>
+
+            </connection-definition>
+            <transaction-support>XATransaction</transaction-support>
+            <authentication-mechanism>
+                <description>Uses JDBC user/password authentication based on properties supplied to connect</description>
+                <authentication-mechanism-type>BasicPassword</authentication-mechanism-type>
+                <credential-interface>javax.resource.spi.security.PasswordCredential</credential-interface>
+            </authentication-mechanism>
+            <reauthentication-support>false</reauthentication-support>
+        </outbound-resourceadapter>
+    </resourceadapter>
+</connector>
