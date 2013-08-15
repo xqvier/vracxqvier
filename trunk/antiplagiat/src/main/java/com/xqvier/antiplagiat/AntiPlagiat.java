@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
 
 import org.apache.abdera.Abdera;
@@ -25,17 +26,31 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 public class AntiPlagiat {
 	private static String API_KEY = "AIzaSyD9BmsRas2py8--nRZL2L4-PiuT8645sJc";
 	private static String cx = "014955674612467653838:zxmxcehdmn4";
-	private static final Integer NB_MOT = 10;
-	private static final Integer FUZZ_FACTOR = 100;
+	private static Integer NB_MOT;
+	private static Integer FUZZ_FACTOR;
 
 	private static int pos_next = 0;
 
 	public static void main(String[] args) {
 		JFileChooser fileChoose = new JFileChooser();
 		fileChoose.setEnabled(true);
-
 		fileChoose.setVisible(true);
 		fileChoose.showOpenDialog(null);
+
+		JOptionPane dialog = new JOptionPane();
+		dialog.setSize(600, 100);
+		dialog.setVisible(true);
+		NB_MOT = Integer.parseInt((String) JOptionPane.showInputDialog(null,
+				"Nombre de mots dans les phrases à chercher", "",
+				JOptionPane.PLAIN_MESSAGE,null,
+				null, ""));
+
+		dialog.setVisible(true);
+		FUZZ_FACTOR = Integer.parseInt((String) JOptionPane.showInputDialog(null,
+				"Nombre de résultat max pour considerer la phrase comme plagiat", "",
+				JOptionPane.PLAIN_MESSAGE,null,
+				null, ""));
+
 		File file = fileChoose.getSelectedFile();
 		XWPFDocument doc;
 		try {
