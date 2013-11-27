@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.xqvier.webmarket.business.core.AbstractDAO;
 import com.xqvier.webmarket.common.entity.Client;
-import com.xqvier.webmarket.common.entity.Product;
 
 /**
  * Classe gérant les requete sur les clients

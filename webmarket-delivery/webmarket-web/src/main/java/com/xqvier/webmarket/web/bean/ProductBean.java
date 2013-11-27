@@ -7,10 +7,7 @@ package com.xqvier.webmarket.web.bean;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.ejb.EJB;
-
 import com.xqvier.webmarket.common.entity.Product;
-import com.xqvier.webmarket.common.service.ProductServiceLocal;
 
 /**
  * Bean associé à l'accueil du site
