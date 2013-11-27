@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.xqvier.webmarket.web.bean.UserBean;
-
 /**
  * Servlet implementation class Commande
  */

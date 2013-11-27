@@ -5,6 +5,7 @@
     <artifactId>webmarket-delivery</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
+  <packaging>jar</packaging>
   <artifactId>webmarket-common</artifactId>
   <dependencies>
   	<dependency>
@@ -12,5 +13,4 @@
   		<artifactId>javaee-api</artifactId>
   	</dependency>
   </dependencies>
-  <packaging>ejb</packaging>
 </project>

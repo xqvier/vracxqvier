@@ -48,7 +48,7 @@ public class DefaultFilter implements Filter {
         // pass the request along the filter chain
         chain.doFilter(request, responseWrapper);
 
-        String modifiedResponse = addFooter(responseWrapper.toString());
+        //String modifiedResponse = addFooter(responseWrapper.toString());
 
         // response.getWriter().write(modifiedResponse);
         response.getWriter().write(responseWrapper.toString());
@@ -61,9 +61,9 @@ public class DefaultFilter implements Filter {
      * @param string
      *            La réponse à surcharger.
      */
-    private static String addFooter(String string) {
-        return string + "<footer>Copyright ©</footer>";
-    }
+//    private static String addFooter(String string) {
+//        return string + "<footer>Copyright ©</footer>";
+//    }
 
     /**
      * @see Filter#init(FilterConfig)
