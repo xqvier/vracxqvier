@@ -8,5 +8,8 @@
         <dependent-module archiveName="webmarket-web-0.0.1-SNAPSHOT.war" deploy-path="/" handle="module:/resource/webmarket-web/webmarket-web">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="webmarket-common-0.0.1-SNAPSHOT.jar" deploy-path="/lib" handle="module:/resource/webmarket-common/webmarket-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
     </wb-module>
 </project-modules>

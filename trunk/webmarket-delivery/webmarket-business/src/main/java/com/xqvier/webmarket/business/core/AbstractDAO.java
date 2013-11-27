@@ -9,44 +9,44 @@ import java.util.List;
 import javax.sql.DataSource;
 
 /**
- * TODO comment class responsabilities
+ * Classe abstraite d'un DAO.
  * 
- * @author Administrateur
+ * @author Xavier Mourgues
  * @param <T>
  *            La classe de l'entité
  * 
  */
 public abstract class AbstractDAO<T> {
-    /** TODO comment field role */
+    /** Datasource du serveur d'application. */
     protected static final DataSource ds = WebmarketJDBC.getDataSource();
 
     
     /**
-     * TODO comment role
+     * Créé un enregistrement dans la table
      * @param obj L'objet à crée
      * @return l'objet créé
      */
     public abstract T create(T obj); 
     /**
-     * TODO comment role
-     * @param obj t
-     * @return t
+     * Met à jour un enregistrement dans la table
+     * @param obj L'objet à mettre à jour
+     * @return L'objet mis à jour
      */
     public abstract T update(T obj); 
     /**
-     * TODO comment role
-     * @param obj t
+     * Supprimer un enregistrement dans la table
+     * @param obj L'objet à supprimer
      */
     public abstract void delete(T obj);
     /**
-     * TODO comment role
-     * @param id t
-     * @return t
+     * Cherche un enregistrement en fonction de son identifiant
+     * @param id L'identifiant de l'enregistrement à trouver
+     * @return L'objet représentant l'enregistrement en table
      */
     public abstract T find(long id); 
     /**
-     * TODO comment role
-     * @return t
+     * Recherche la liste des enregistrement de la table
+     * @return la liste d'objet représentant les enregistrement.
      */
     public abstract List<T> findAll();
 }

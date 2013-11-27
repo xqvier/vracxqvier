@@ -12,24 +12,27 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.xqvier.webmarket.web.util.ResponseWrapper;
+import com.xqvier.webmarket.web.bean.UserBean;
 
 /**
- * Servlet Filter implementation class DefaultFilter
+ * Servlet Filter implementation class ClientAuthorizedFilter
  */
-@WebFilter("/*")
-public class DefaultFilter implements Filter {
+@WebFilter("/Commande")
+public class ClientAuthorizedFilter implements Filter {
+
+    private String contextPath;
 
     /**
      * Default constructor.
      */
-    public DefaultFilter() {
+    public ClientAuthorizedFilter() {
     }
 
     /**
      * @see Filter#destroy()
      */
     public void destroy() {
+        contextPath = null;
     }
 
     /**
@@ -39,37 +42,21 @@ public class DefaultFilter implements Filter {
             FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-
-        System.out.println("Utilisateur " + req.getRemoteHost()
-                + " tried to access the resource " + req.getRequestURL());
-
-        ResponseWrapper responseWrapper = new ResponseWrapper(resp);
-
-        // pass the request along the filter chain
-        chain.doFilter(request, responseWrapper);
-
-        String modifiedResponse = addFooter(responseWrapper.toString());
-
-        // response.getWriter().write(modifiedResponse);
-        response.getWriter().write(responseWrapper.toString());
-
-    }
-
-    /**
-     * Ajoute un footer à la réponse HTTP envoyée au client.
-     * 
-     * @param string
-     *            La réponse à surcharger.
-     */
-    private static String addFooter(String string) {
-        return string + "<footer>Copyright ©</footer>";
+        if (!((UserBean) req.getSession().getAttribute("userBean"))
+                .isConnected()) {
+            req.getSession()
+                    .setAttribute("afterLoginGoTo", req.getRequestURL());
+            resp.sendRedirect(contextPath + "/Login");
+            return;
+        }
+        chain.doFilter(request, response);
     }
 
     /**
      * @see Filter#init(FilterConfig)
      */
     public void init(FilterConfig fConfig) throws ServletException {
-
+        contextPath = fConfig.getServletContext().getContextPath();
     }
 
 }

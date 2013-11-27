@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
- * TODO comment class responsabilities
+ * Wrapper d'une réponse HTTP pour permettre la surcharge de celle-ci.
  * 
- * @author Administrateur
+ * @author Xavier Mourgues
  * 
  */
 public class ResponseWrapper extends HttpServletResponseWrapper {
@@ -22,7 +22,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
     private StringWriter stringWriter;
 
     /**
-     * TODO comment initialization state
+     * Constructeur utilisant la réponse HTTP pour la "wrap"
      * 
      * @param response
      *            Réponse Http

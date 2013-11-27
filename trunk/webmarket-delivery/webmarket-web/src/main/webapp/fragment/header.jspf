@@ -1,0 +1,9 @@
+<header>
+	<h1>WebMarket</h1>
+	<c:if test="${sessionScope.userBean.connected}">
+		<i>Utilisateur connecté :
+			${sessionScope.userBean.client.firstName}
+			${sessionScope.userBean.client.lastName}
+			(${sessionScope.userBean.client.userName})</i>
+	</c:if>
+</header>

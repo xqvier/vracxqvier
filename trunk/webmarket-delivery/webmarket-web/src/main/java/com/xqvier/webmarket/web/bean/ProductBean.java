@@ -4,27 +4,31 @@
  */
 package com.xqvier.webmarket.web.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-import com.xqvier.webmarket.business.core.DAOFactory;
-import com.xqvier.webmarket.business.entity.Product;
+import javax.ejb.EJB;
+
+import com.xqvier.webmarket.common.entity.Product;
+import com.xqvier.webmarket.common.service.ProductServiceLocal;
 
 /**
- * TODO comment class responsabilities
+ * Bean associé à l'accueil du site
  * 
- * @author Administrateur
+ * @author Xavier Mourgues
  * 
  */
-public class HomeBean {
-    List<Product> products;
-    
-    
+public class ProductBean implements Serializable {
+    /** Identifiant de sérialisation */
+    private static final long serialVersionUID = 1L;
 
+    private List<Product> products;
+
+    
     /**
-     * TODO comment initialization state
+     * Constructeur par défaut, requete la liste des produits.
      */
-    public HomeBean() {
-        products = DAOFactory.getProductDAO().findAll();
+    public ProductBean() {
     }
 
     /**

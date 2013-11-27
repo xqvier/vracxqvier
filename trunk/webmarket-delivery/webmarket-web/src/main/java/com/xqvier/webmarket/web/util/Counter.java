@@ -5,8 +5,9 @@
 package com.xqvier.webmarket.web.util;
 
 /**
- * TODO comment class responsabilities
- * @author Administrateur
+ * Classe permettant de compter.
+ * @deprecated non utilisé
+ * @author Xavier Mourgues
  *
  */
 public class Counter {
@@ -14,7 +15,7 @@ public class Counter {
     private int count;
     
     /**
-     * TODO comment initialization state
+     * Constructeur par défaut, initialise le compteur à 0.
      */
     public Counter() {        
         super();

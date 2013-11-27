@@ -2,13 +2,15 @@ package com.xqvier.webmarket.web.servlet;
 
 import java.io.IOException;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.xqvier.webmarket.business.core.DAOFactory;
+import com.xqvier.webmarket.common.service.ProductServiceLocal;
+import com.xqvier.webmarket.web.bean.ProductBean;
 import com.xqvier.webmarket.web.pojo.Cart;
 
 /**
@@ -18,12 +20,14 @@ import com.xqvier.webmarket.web.pojo.Cart;
 public class Home extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    @EJB(beanInterface = ProductServiceLocal.class)
+    private ProductServiceLocal productServiceLocal;
+    
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Home() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -41,19 +45,27 @@ public class Home extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        Cart panier = (Cart) request.getSession().getAttribute("cart");
+
+        ProductBean productBean = (ProductBean) getServletContext().getAttribute("productBean");
+        if(productBean.getProducts() == null){
+            productBean.setProducts(productServiceLocal.findAll());
+        }
+        
+        
         if (request.getParameter("addId") != null) {
-            ((Cart) request.getSession().getAttribute("panier")).getProducts()
-                    .add(DAOFactory.getProductDAO().find(
-                            Long.parseLong(request.getParameter("addId"))));
+            panier.getProducts().add(
+                    productServiceLocal.find(Long.parseLong(request
+                            .getParameter("addId"))));
         }
 
         if (request.getParameter("removeId") != null) {
-            ((Cart) request.getSession().getAttribute("panier")).getProducts()
-                    .remove(Integer.parseInt(request.getParameter("removeId")));
+            panier.getProducts().remove(
+                    productServiceLocal.find(Long.parseLong(request
+                            .getParameter("removeId"))));
         }
 
-        getServletContext().getRequestDispatcher("/home.jsp").forward(request,
-                response);
+        response.sendRedirect(getServletContext().getContextPath() + "/home.jsp");
     }
 
 }
