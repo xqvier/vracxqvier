@@ -10,9 +10,9 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- * TODO comment class responsabilities
+ * Classe singleton gérant le datasource du serveur d'application.
  * 
- * @author Administrateur
+ * @author Xavier Mourgues
  * 
  */
 public class WebmarketJDBC {
@@ -20,15 +20,12 @@ public class WebmarketJDBC {
     private static DataSource ds = null;
 
     /**
-     * TODO comment initialization state
+     * Constructeur par défaut privé pour empêcher l'instanciation.
      */
     private WebmarketJDBC() {
-        // TODO Auto-generated constructor stub
     }
 
-    /**
-     * TODO comment role
-     * 
+    /** 
      * @return La datasource
      */
     public static DataSource getDataSource() {
@@ -38,7 +35,7 @@ public class WebmarketJDBC {
     }
 
     /**
-     * TODO comment role
+     * Attache la datasource du serveur d'application à la classe.
      */
     private static void initialize() {
         if (ds == null) {

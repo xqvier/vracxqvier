@@ -13,26 +13,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.xqvier.webmarket.business.core.AbstractDAO;
-import com.xqvier.webmarket.business.entity.Product;
+import com.xqvier.webmarket.common.entity.Product;
 
 /**
- * TODO comment class responsabilities
+ * Classe d'abstraction d'acces aux données pour la table "product"
  * 
- * @author Administrateur
+ * @author Xavier Mourgues
  * 
  */
 public class ProductDAO extends AbstractDAO<Product> {
 
     /**
-     * TODO comment initialization state
+     * Default Constructor
      */
     public ProductDAO() {
     }
 
     /**
-     * TODO comment role
-     * 
-     * @return La liste des produits disponible
+     * Retourne la liste de tous les produits. 
+     * @return La liste des produits.
      */
     public List<Product> findAll() {
 
@@ -114,9 +113,36 @@ public class ProductDAO extends AbstractDAO<Product> {
      * com.xqvier.webmarket.business.core.AbstractDAO#update(java.lang.Object)
      */
     @Override
-    public Product update(Product obj) {
-        // TODO Auto-generated method stub
-        return null;
+    public Product update(Product pProduct) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            connection = ds.getConnection();
+            statement = connection
+                    .prepareStatement("UPDATE product SET name = ?, price = ? WHERE id = ?");
+            statement.setString(1, pProduct.getName());
+            statement.setDouble(2, pProduct.getPrice());
+            statement.setInt(3, pProduct.getId());
+
+            statement.executeUpdate();
+            return pProduct;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
     /*
@@ -126,9 +152,32 @@ public class ProductDAO extends AbstractDAO<Product> {
      * com.xqvier.webmarket.business.core.AbstractDAO#delete(java.lang.Object)
      */
     @Override
-    public void delete(Product obj) {
-        // TODO Auto-generated method stub
+    public void delete(Product pProduct) {
+        Connection connection = null;
+        PreparedStatement statement = null;
 
+        try {
+            connection = ds.getConnection();
+            statement = connection
+                    .prepareStatement("DELETE FROM product WHERE id = ?");
+            statement.setInt(1, pProduct.getId());
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /*

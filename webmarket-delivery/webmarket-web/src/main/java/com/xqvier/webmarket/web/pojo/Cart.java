@@ -6,22 +6,22 @@ package com.xqvier.webmarket.web.pojo;
 
 import java.util.List;
 
-import com.xqvier.webmarket.business.entity.Product;
+import com.xqvier.webmarket.common.entity.Product;
 
 /**
- * TODO comment class responsabilities
+ * Classe représentant le panier d'un utilisateur
  * 
- * @author Administrateur
+ * @author Xavier Mourgues
  * 
  */
 public class Cart {
     private List<Product> products;
 
     /**
-     * TODO comment initialization state
+     * Constructeur initialisation un panier avec une liste de produit
      * 
      * @param pProducts
-     *            Liste des produits du panier
+     *            La liste des produits du panier
      */
     public Cart(List<Product> pProducts) {
         products = pProducts;
@@ -43,7 +43,7 @@ public class Cart {
     }
 
     /**
-     * TODO comment role
+     * Retourne le prix total du panier
      * 
      * @return Le cout total du panier
      */
@@ -61,7 +61,7 @@ public class Cart {
     }
 
     /**
-     * TODO comment role
+     * Retourne le nombre d'article du panier
      * 
      * @return Le nombre d'article dans le panier
      */

@@ -1,11 +1,12 @@
 package com.xqvier.webmarket.web.listener;
 
-import javax.servlet.ServletContext;
+import javax.ejb.EJB;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import com.xqvier.webmarket.web.util.Counter;
+import com.xqvier.webmarket.common.service.ProductServiceLocal;
+import com.xqvier.webmarket.web.bean.ProductBean;
 
 /**
  * Application Lifecycle Listener implementation class ContextListener
@@ -13,8 +14,9 @@ import com.xqvier.webmarket.web.util.Counter;
  */
 @WebListener
 public class ContextLifecycleListener implements ServletContextListener {
-    private ServletContext context = null;
 
+    @EJB
+    private ProductServiceLocal productServiceLocal;
     /**
      * Default constructor. 
      */
@@ -26,15 +28,15 @@ public class ContextLifecycleListener implements ServletContextListener {
      * @see ServletContextListener#contextInitialized(ServletContextEvent)
      */
     public void contextInitialized(ServletContextEvent arg0) {
-        context = arg0.getServletContext();
-        context.setAttribute("counter", new Counter());
+        ProductBean productBean = new ProductBean();
+        arg0.getServletContext().setAttribute("productBean", productBean);
     }
 
 	/**
      * @see ServletContextListener#contextDestroyed(ServletContextEvent)
      */
     public void contextDestroyed(ServletContextEvent arg0) {
-        arg0.getServletContext().removeAttribute("counter");
+        arg0.getServletContext().removeAttribute("productBean");
     }
 	
 }

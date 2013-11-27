@@ -13,6 +13,7 @@
 		<module>webmarket-business</module>
 		<module>webmarket-web</module>
 		<module>webmarket-doc</module>
+		<module>webmarket-common</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
