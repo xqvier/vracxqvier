@@ -1,16 +1,10 @@
 package com.xqvier.encrypt.framework;
 
-public abstract class SymetricEncrypt{
-	protected byte[] key;
-	
-	public SymetricEncrypt(byte[] pKey) {
-		key = pKey;
-	}
+public interface SymetricEncrypt {
 	
 	
-	public abstract byte[] encrypt(byte[] pWord);
+	public Word encrypt(Word pWord, Key pKey);
 	
-
-	protected abstract byte[] keySchedule(byte[] pKey, int pRound);
+	public Word decrypt(Word pWord, Key pKey);
 	
 }

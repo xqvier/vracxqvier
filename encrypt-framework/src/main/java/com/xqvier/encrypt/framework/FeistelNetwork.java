@@ -1,43 +1,50 @@
 package com.xqvier.encrypt.framework;
 
-import java.util.Arrays;
 
-public abstract class FeistelNetwork extends SymetricEncrypt {
+public abstract class FeistelNetwork implements SymetricEncrypt {
+
+	private KeySchedule keySchedule;
 
 	private int round;
 
-	public FeistelNetwork(byte[] pKey, int pRound) {
-		super(pKey);
+	public FeistelNetwork(KeySchedule pKeySchedule, int pRound) {
+
+		keySchedule = pKeySchedule;
 		this.round = pRound;
 	}
 
-	public byte[] encrypt(byte[] pWord) {
-		int partLength = pWord.length / 2;
-		byte[] leftPart = new byte[partLength];
-		leftPart = Arrays.copyOfRange(pWord, 0, partLength);
-		byte[] rightPart = new byte[partLength];
-		rightPart = Arrays.copyOfRange(pWord, partLength, pWord.length);
-		byte[] memorize = new byte[partLength];
+	public Word encrypt(Word pWord, Key pKey) {
+		keySchedule.initializeKey(pKey, round);
+		
+		
+		int partLength = pWord.getLength() / 2;
+		Word leftPart = pWord.getLeftPart();
+		Word rightPart = pWord.getRightPart();
+		Word memorize;
 		for (int i = 0; i < round; i++) {
-			memorize = Arrays.copyOf(rightPart, partLength);
-			rightPart = encryptFunction(keySchedule(key, i + 1), rightPart);
+			memorize = rightPart.getCopy();
+			rightPart = encryptFunction(keySchedule.getRoundKey(i), rightPart);
 			for (int j = 0; j < partLength; j++) {
-				rightPart[j] = (byte) (leftPart[j] ^ rightPart[j]);
+				rightPart.doXOR(leftPart);
 			}
-			leftPart = Arrays.copyOf(memorize, partLength);
+			leftPart = memorize.getCopy();
 
 		}
-		memorize = Arrays.copyOf(leftPart, partLength);
-		leftPart = Arrays.copyOf(rightPart, partLength);
-		rightPart = Arrays.copyOf(memorize, partLength);
+		memorize = leftPart.getCopy();
+		leftPart = rightPart.getCopy();
+		rightPart = memorize.getCopy();
 
-		System.arraycopy(leftPart, 0, memorize, 0, partLength);
-		System.arraycopy(rightPart, 0, memorize, partLength, pWord.length);
 
-		return memorize;
+		return leftPart.concat(rightPart);
 
 	}
+	
+	@Override
+	public Word decrypt(Word pWord, Key pKey) {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("not implemented yet");
+	}
 
-	protected abstract byte[] encryptFunction(byte[] pKey, byte[] pWord);
+	protected abstract Word encryptFunction(Key pKey, Word pWord);
 
 }
