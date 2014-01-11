@@ -6,6 +6,7 @@ public class ByteArrayWord implements Word {
 
 	private byte[] word;
 
+	@Deprecated
 	public ByteArrayWord() {
 	}
 
@@ -48,8 +49,12 @@ public class ByteArrayWord implements Word {
 
 	@Override
 	public Word concat(Word pWord) {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("not implemented yet");
+		byte[] result = Arrays.copyOf(word, word.length + pWord.getLength());
+		byte[] secondWord = pWord.getByteArray();
+		for (int i = word.length; i < result.length; i++) {
+			result[i] = secondWord[i - word.length];
+		}
+		return new ByteArrayWord(result);
 	}
 
 	@Override
@@ -60,8 +65,7 @@ public class ByteArrayWord implements Word {
 
 	@Override
 	public byte[] getByteArray() {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("not implemented yet");
+		return Arrays.copyOf(word, word.length);
 	}
 
 	@Override

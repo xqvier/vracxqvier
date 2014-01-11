@@ -18,6 +18,9 @@ public class ByteMatriceWord implements Word {
 		createWord(pWord, pPageAxis);
 
 	}
+	@Deprecated
+	public ByteMatriceWord(){		
+	}
 
 	public ByteMatriceWord(byte[] pWord, int pSize, boolean pPageAxis) {
 		this(pWord, pSize, pSize, pPageAxis);
@@ -95,7 +98,7 @@ public class ByteMatriceWord implements Word {
 		if (pageAxis) {
 			for (int i = 0; i < rowCount; i++) {
 				for (int j = 0; j < columnCount; j++) {
-					array[i * rowCount + j] = word[i][j];
+					array[i * rowCount + j] = word[j][i];
 				}
 			}
 		} else {
@@ -163,27 +166,52 @@ public class ByteMatriceWord implements Word {
 	//
 	//
 	// }
-
 	public ByteMatriceWord GF2Multiplication(ByteMatriceWord pMatrice) {
+
 		ByteMatriceWord newWord = (ByteMatriceWord) this.getCopy();
 		for (int j = 0; j < columnCount; j++) {
-			newWord.word[0][j] = (byte) (GF2Multiplication((byte) 0x02,
-					word[0][j])
-					^ GF2Multiplication((byte) 0x03, word[1][j])
-					^ word[2][j] ^ word[3][j]);
-			newWord.word[1][j] = (byte) (word[0][j]
-					^ GF2Multiplication((byte) 0x02, word[1][j])
-					^ GF2Multiplication((byte) 0x03, word[2][j]) ^ word[3][j]);
-			newWord.word[2][j] = (byte) (word[0][j] ^ word[1][j]
-					^ GF2Multiplication((byte) 0x02, word[2][j]) ^ GF2Multiplication(
-					(byte) 0x03, word[3][j]));
-			newWord.word[3][j] = (byte) (GF2Multiplication((byte) 0x03,
-					word[0][j]) ^ word[1][j] ^ word[2][j] ^ GF2Multiplication(
-					(byte) 0x02, word[3][j]));
+			for (int i = 0; i < rowCount; i++) {
+				newWord.word[i][j] = (byte) (GF2Multiplication(
+						pMatrice.word[i][0], word[0][j])
+						^ GF2Multiplication(pMatrice.word[i][1], word[1][j])
+						^ GF2Multiplication(pMatrice.word[i][2], word[2][j]) ^ GF2Multiplication(
+						pMatrice.word[i][3], word[3][j]));
+				// newWord.word[1][j] = (byte) (word[0][j]
+				// ^ GF2Multiplication((byte) 0x02, word[1][j])
+				// ^ GF2Multiplication((byte) 0x03, word[2][j]) ^ word[3][j]);
+				// newWord.word[2][j] = (byte) (word[0][j] ^ word[1][j]
+				// ^ GF2Multiplication((byte) 0x02, word[2][j]) ^
+				// GF2Multiplication(
+				// (byte) 0x03, word[3][j]));
+				// newWord.word[3][j] = (byte) (GF2Multiplication((byte) 0x03,
+				// word[0][j]) ^ word[1][j] ^ word[2][j] ^ GF2Multiplication(
+				// (byte) 0x02, word[3][j]));
+			}
 		}
 
 		return newWord;
 	}
+	
+//	public ByteMatriceWord GF2Multiplication(ByteMatriceWord pMatrice) {
+//		ByteMatriceWord newWord = (ByteMatriceWord) this.getCopy();
+//		for (int j = 0; j < columnCount; j++) {
+//			newWord.word[0][j] = (byte) (GF2Multiplication((byte) 0x02,
+//					word[0][j])
+//					^ GF2Multiplication((byte) 0x03, word[1][j])
+//					^ word[2][j] ^ word[3][j]);
+//			newWord.word[1][j] = (byte) (word[0][j]
+//					^ GF2Multiplication((byte) 0x02, word[1][j])
+//					^ GF2Multiplication((byte) 0x03, word[2][j]) ^ word[3][j]);
+//			newWord.word[2][j] = (byte) (word[0][j] ^ word[1][j]
+//					^ GF2Multiplication((byte) 0x02, word[2][j]) ^ GF2Multiplication(
+//					(byte) 0x03, word[3][j]));
+//			newWord.word[3][j] = (byte) (GF2Multiplication((byte) 0x03,
+//					word[0][j]) ^ word[1][j] ^ word[2][j] ^ GF2Multiplication(
+//					(byte) 0x02, word[3][j]));
+//		}
+//
+//		return newWord;
+//	}
 
 	private byte GF2Multiplication(byte a, byte b) {
 		byte p = 0;

@@ -16,33 +16,38 @@ public class WordFactory {
 			Class<? extends Word> pClazz, int pSize) {
 		List<Word> wordList = new LinkedList<Word>();
 		Word word;
-
-		for (int i = 0; i < pWord.length / pSize; i++) {
-			try {
+		try {
+			int i = 0;
+			for (; i < (pWord.length / pSize); i++) {
 
 				word = pClazz.newInstance();
-				pWord = rightPadding(pWord, pWord.length % pSize, pSize);
-				word.createWord(Arrays.copyOfRange(pWord, i, i + pSize));
+				word.createWord(Arrays.copyOfRange(pWord, i * pSize, i * pSize
+						+ pSize));
 				wordList.add(word);
-			} catch (InstantiationException e) {
-				throw new RuntimeException();
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException();
 			}
-		}
+			word = pClazz.newInstance();
+			pWord = Arrays.copyOfRange(pWord, i * pSize, pWord.length);
+			pWord = rightPadding(pWord, pSize);
+			word.createWord(pWord);
+			wordList.add(word);
 
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 		return wordList;
 	}
-	
-	public static byte[] createByteArray(List<Word> pWordList){
-		int i = 0; 
+
+	public static byte[] createByteArray(List<Word> pWordList) {
+		int i = 0;
 		Word result = new ByteArrayWord(new byte[0]);
-		for(;i< pWordList.size() ; i++){
-			result.concat(pWordList.get(i));
+		for (; i < pWordList.size(); i++) {
+			result = result.concat(pWordList.get(i));
 		}
-		
+
 		return removePadding(result.getByteArray());
-		
+
 	}
 
 	public static List<Word> createWordList(File pFile,
@@ -91,16 +96,25 @@ public class WordFactory {
 		}
 
 	}
-	
 
 	private static byte[] removePadding(byte[] pWord) {
-		// TODO
-		return pWord;
+		return Arrays.copyOfRange(pWord, 0, pWord.length - (pWord[pWord.length - 1] & 0xff));
 	}
 
-	private static byte[] rightPadding(byte[] pWord, int pOffset, int pLength) {
-		// TODO
-		return pWord;
+	private static byte[] rightPadding(byte[] pWord, int pLength) {
+		byte[] result = new byte[pLength];
+
+		result = Arrays.copyOfRange(pWord, 0, pLength);
+
+		for (int i = pWord.length; i < pLength; i++) {
+			result[i] = (byte) (pLength - pWord.length);
+		}
+
+		return result;
+	}
+
+	private static byte[] rightPadding(byte[] buf, int nbRead, int pSize) {
+		return rightPadding(Arrays.copyOfRange(buf, 0, nbRead), pSize);
 	}
 
 }

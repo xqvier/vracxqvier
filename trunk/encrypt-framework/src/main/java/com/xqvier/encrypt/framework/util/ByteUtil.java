@@ -16,4 +16,13 @@ public class ByteUtil {
 		}
 		return array;
 	}
+
+	public static byte[] reverseSubstitutionTable(byte[] subBytesTable) {
+		byte[] result = new byte[subBytesTable.length];
+		for(int i = 0; i < subBytesTable.length; i++){
+			result[subBytesTable[i] & 0xff] = (byte) i;
+		}
+		
+		return result;
+	}
 }
