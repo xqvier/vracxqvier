@@ -83,32 +83,16 @@ public class AESEncrypt implements SymetricEncrypt {
 		keySchedule.initializeKey(aesKey, nbRound);
 
 		word = addRoundKey(word, aesKey);
-		System.out.println("AFTER ADDROUNDKEY");
-		System.out.println(word);
 		int i = 0;
 		for (; i < nbRound - 1; i++) {
 			word = subBytes(word);
-			System.out.println("AFTER SUBBYTES");
-			System.out.println(word);
 			word = shiftRows(word);
-			System.out.println("AFTER SHIFTROWS");
-			System.out.println(word);
 			word = mixColumns(word);
-			System.out.println("AFTER MIXCOLUMNS");
-			System.out.println(word);
 			word = addRoundKey(word, (AESKey) keySchedule.getRoundKey(i));
-			System.out.println("AFTER ADDROUNDKEY");
-			System.out.println(word);
 		}
 		word = subBytes(word);
-		System.out.println("AFTER SUBBYTES");
-		System.out.println(word);
 		word = shiftRows(word);
-		System.out.println("AFTER SHIFTROWS");
-		System.out.println(word);
 		word = addRoundKey(word, (AESKey) keySchedule.getRoundKey(i));
-		System.out.println("AFTER ADDROUNDKEY");
-		System.out.println(word);
 
 		// final round (without mixColumns)
 
@@ -134,7 +118,7 @@ public class AESEncrypt implements SymetricEncrypt {
 
 	private ByteMatriceWord mixColumns(ByteMatriceWord pWord) {
 		if (pWord.getRowCount() == 4) {
-			pWord.GF2Multiplication(MIX_COLUMN_MATRICE_4_x_4);
+			pWord = pWord.GF2Multiplication(MIX_COLUMN_MATRICE_4_x_4);
 		} else {
 			// TODO Auto-generated method stub
 			throw new RuntimeException("not implemented yet");
