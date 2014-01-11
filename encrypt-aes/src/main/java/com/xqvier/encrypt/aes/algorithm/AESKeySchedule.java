@@ -35,12 +35,14 @@ public class AESKeySchedule implements KeySchedule {
 			newKey.shiftColumn(0, 1, true);
 			newKey.subtituteColumn(0, AESEncrypt.SUB_BYTES_TABLE);
 			newKey.doColumnXOR(0, previousKey, 0);
-			newKey.doColumnXOR(0, RCON_MATRICE_TABLE, 0);
+			newKey.doColumnXOR(0, RCON_MATRICE_TABLE, k);
 			// others column (easy one)
 			for (int i = 1; i < newKey.getColumnCount(); i++) {
+				newKey.copyColumn(i, newKey, i-1);
 				newKey.doColumnXOR(i, previousKey, i);
 			}			
 			keyList.add(newKey);
+			previousKey = newKey;
 		}
 	}
 

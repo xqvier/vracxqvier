@@ -8,6 +8,8 @@ public class ByteMatriceWord implements Word {
 
 	private int columnCount = 0;
 
+	private boolean pageAxis = true;
+
 	public ByteMatriceWord(byte[] pWord, int pRowCount, int pColumnCount,
 			boolean pPageAxis) {
 		rowCount = pRowCount;
@@ -52,8 +54,8 @@ public class ByteMatriceWord implements Word {
 	}
 
 	public Word getCopy() {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("not implemented yet");
+		return new ByteMatriceWord(getByteArray(), rowCount, columnCount,
+				pageAxis);
 	}
 
 	public void doXOR(Word pWord) {
@@ -89,8 +91,21 @@ public class ByteMatriceWord implements Word {
 	}
 
 	public byte[] getByteArray() {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("not implemented yet");
+		byte[] array = new byte[rowCount * columnCount];
+		if (pageAxis) {
+			for (int i = 0; i < rowCount; i++) {
+				for (int j = 0; j < columnCount; j++) {
+					array[i * rowCount + j] = word[i][j];
+				}
+			}
+		} else {
+			for (int j = 0; j < columnCount; j++) {
+				for (int i = 0; i < rowCount; i++) {
+					array[j * columnCount + i] = word[i][j];
+				}
+			}
+		}
+		return array;
 	}
 
 	public void shiftRow(int pRowIndex, int pNbShift, boolean pRightShift) {
@@ -149,24 +164,28 @@ public class ByteMatriceWord implements Word {
 	//
 	// }
 
-	public void GF2Multiplication(ByteMatriceWord pMatrice) {
-		
+	public ByteMatriceWord GF2Multiplication(ByteMatriceWord pMatrice) {
+		ByteMatriceWord newWord = (ByteMatriceWord) this.getCopy();
 		for (int j = 0; j < columnCount; j++) {
-			word[0][j] = (byte) (GF2Multiplication((byte) 0x02, word[0][j])
-					^ GF2Multiplication((byte) 0x03, word[1][j]) ^ word[2][j] ^ word[3][j]);
-			word[1][j] = (byte) (word[0][j]
+			newWord.word[0][j] = (byte) (GF2Multiplication((byte) 0x02,
+					word[0][j])
+					^ GF2Multiplication((byte) 0x03, word[1][j])
+					^ word[2][j] ^ word[3][j]);
+			newWord.word[1][j] = (byte) (word[0][j]
 					^ GF2Multiplication((byte) 0x02, word[1][j])
 					^ GF2Multiplication((byte) 0x03, word[2][j]) ^ word[3][j]);
-			word[2][j] = (byte) (word[0][j] ^ word[1][j]
+			newWord.word[2][j] = (byte) (word[0][j] ^ word[1][j]
 					^ GF2Multiplication((byte) 0x02, word[2][j]) ^ GF2Multiplication(
 					(byte) 0x03, word[3][j]));
-			word[3][j] = (byte) (GF2Multiplication((byte) 0x03, word[0][j])
-					^ word[1][j] ^ word[2][j] ^ GF2Multiplication((byte) 0x02,
-					word[3][j]));
+			newWord.word[3][j] = (byte) (GF2Multiplication((byte) 0x03,
+					word[0][j]) ^ word[1][j] ^ word[2][j] ^ GF2Multiplication(
+					(byte) 0x02, word[3][j]));
 		}
+
+		return newWord;
 	}
 
-	private byte GF2Multiplication(byte a, byte b) { 
+	private byte GF2Multiplication(byte a, byte b) {
 		byte p = 0;
 		byte counter;
 		byte hi_bit_set;
@@ -188,6 +207,7 @@ public class ByteMatriceWord implements Word {
 		if (pWord == null || pWord.length == 0) {
 			throw new RuntimeException("Can not create a word of size 0");
 		}
+		pageAxis = pPageAxis;
 
 		if (rowCount == 0) {
 			rowCount = (int) Math.sqrt(pWord.length);
@@ -227,17 +247,16 @@ public class ByteMatriceWord implements Word {
 	public boolean equals(Object obj) {
 		ByteMatriceWord byteMatriceWord = (ByteMatriceWord) obj;
 		boolean equals = true;
-		for(int i = 0 ; i < rowCount ; i++){
-			for(int j = 0; j < columnCount; j++){
-				if(word[i][j] != byteMatriceWord.word[i][j]){
+		for (int i = 0; i < rowCount; i++) {
+			for (int j = 0; j < columnCount; j++) {
+				if (word[i][j] != byteMatriceWord.word[i][j]) {
 					equals = false;
 				}
 			}
 		}
-		
+
 		return equals;
-		
-		
+
 	}
-	
+
 }
