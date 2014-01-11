@@ -91,8 +91,7 @@ public class WordFactory {
 			fos.write(removePadding(pWordList.get(i).getByteArray()));
 			fos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
 	}
