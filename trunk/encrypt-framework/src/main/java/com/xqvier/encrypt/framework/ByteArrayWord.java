@@ -43,8 +43,10 @@ public class ByteArrayWord implements Word {
 
 	@Override
 	public void doXOR(Word pWord) {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("not implemented yet");
+		byte[] wordToXOR = pWord.getByteArray();
+		for (int i = 0; i < word.length; i++) {
+			word[i] = (byte) (word[i] ^ wordToXOR[i]);
+		}
 	}
 
 	@Override
@@ -59,8 +61,9 @@ public class ByteArrayWord implements Word {
 
 	@Override
 	public void subtitute(byte[] pSubtituteTable) {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("not implemented yet");
+		for (int i = 0; i < word.length; i++) {
+			word[i] = pSubtituteTable[word[i] & 0xff];
+		}
 	}
 
 	@Override
