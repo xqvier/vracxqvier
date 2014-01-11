@@ -1,5 +1,6 @@
 package com.xqvier.encrypt.aes.algorithm;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,12 +39,18 @@ public class AESKeySchedule implements KeySchedule {
 			newKey.doColumnXOR(0, RCON_MATRICE_TABLE, k);
 			// others column (easy one)
 			for (int i = 1; i < newKey.getColumnCount(); i++) {
-				newKey.copyColumn(i, newKey, i-1);
+				newKey.copyColumn(i, newKey, i - 1);
 				newKey.doColumnXOR(i, previousKey, i);
-			}			
+			}
 			keyList.add(newKey);
 			previousKey = newKey;
 		}
+	}
+
+	@Override
+	public void initializeReverseKey(Key pKey, int pNbRound) {
+		initializeKey(pKey, pNbRound);
+		Collections.reverse(keyList);
 	}
 
 	public Key getRoundKey(int pRound) {

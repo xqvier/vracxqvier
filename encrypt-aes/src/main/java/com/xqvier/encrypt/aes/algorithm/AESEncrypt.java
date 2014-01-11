@@ -3,11 +3,11 @@ package com.xqvier.encrypt.aes.algorithm;
 import com.xqvier.encrypt.framework.ByteMatriceWord;
 import com.xqvier.encrypt.framework.Key;
 import com.xqvier.encrypt.framework.KeySchedule;
-import com.xqvier.encrypt.framework.SymetricEncrypt;
+import com.xqvier.encrypt.framework.Encrypt;
 import com.xqvier.encrypt.framework.Word;
 import com.xqvier.encrypt.framework.util.ByteUtil;
 
-public class AESEncrypt implements SymetricEncrypt {
+public class AESEncrypt implements Encrypt {
 
 	private int nbRound;
 
@@ -39,9 +39,15 @@ public class AESEncrypt implements SymetricEncrypt {
 			0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb,
 			0x16);
 
-	private static final ByteMatriceWord MIX_COLUMN_MATRICE_4_x_4 = new ByteMatriceWord(
+	private static final byte[] SUB_BYTES_REVERSE_TABLE = ByteUtil
+			.reverseSubstitutionTable(SUB_BYTES_TABLE);
+
+	private static final ByteMatriceWord MIX_COLUMN_MATRIX_4_x_4 = new ByteMatriceWord(
 			new byte[] { 0x02, 0x01, 0x01, 0x03, 0x03, 0x02, 0x01, 0x01, 0x01,
 					0x03, 0x02, 0x01, 0x01, 0x01, 0x03, 0x02 }, 4, true);
+	private static final ByteMatriceWord MIX_COLUMN_REVERSE_MATRIX_4_x_4 = new ByteMatriceWord(
+			new byte[] { 0x0e, 0x09, 0x0d, 0x0b, 0x0b, 0x0e, 0x09, 0x0d, 0x0d,
+					0x0b, 0x0e, 0x09, 0x09, 0x0d, 0x0b, 0x0e }, 4, true);
 
 	public AESEncrypt(int pNbRound, KeySchedule pKeySchedule) {
 		if (pNbRound < 1) {
@@ -60,6 +66,67 @@ public class AESEncrypt implements SymetricEncrypt {
 	}
 
 	public ByteMatriceWord encrypt(Word pWord, Key pKey) {
+		checkWord(pWord);
+		ByteMatriceWord word = (ByteMatriceWord) pWord.getCopy();
+
+		checkKey(pKey);
+		AESKey aesKey = (AESKey) pKey;
+
+		keySchedule.initializeKey(aesKey, nbRound);
+
+		word = addRoundKey(word, aesKey);
+		int i = 0;
+		for (; i < nbRound - 1; i++) {
+			word = subBytes(word, false);
+			word = shiftRows(word, false);
+			word = mixColumns(word, false);
+			word = addRoundKey(word, (AESKey) keySchedule.getRoundKey(i));
+		}
+		// final round (without mixColumns)
+		word = subBytes(word, false);
+		word = shiftRows(word, false);
+		word = addRoundKey(word, (AESKey) keySchedule.getRoundKey(i));
+
+		return word;
+	}
+
+	public ByteMatriceWord decrypt(Word pWord, Key pKey) {
+		checkWord(pWord);
+		ByteMatriceWord word = (ByteMatriceWord) pWord;
+
+		checkKey(pKey);
+		AESKey aesKey = (AESKey) pKey;
+
+		keySchedule.initializeReverseKey(aesKey, nbRound);
+
+		int i = 0;
+		word = addRoundKey(word, (AESKey) keySchedule.getRoundKey(i));
+		i++;
+		for (; i < nbRound; i++) {
+			word = shiftRows(word, true);
+			word = subBytes(word, true);
+			word = addRoundKey(word, (AESKey) keySchedule.getRoundKey(i));
+			word = mixColumns(word, true);
+		}
+		word = shiftRows(word, true);
+		word = subBytes(word, true);
+		word = addRoundKey(word, aesKey);
+
+		return word;
+	}
+
+	private void checkKey(Key pKey) {
+		if (!(pKey instanceof AESKey)) {
+			System.out
+					.println("Warning you did not chose a AESKey for the AES Encrypt."
+							+ " It will be converted but it may cause subsequent problem");
+
+			pKey = new AESKey(pKey.getByteArray());
+
+		}
+	}
+
+	private void checkWord(Word pWord) {
 		if (!(pWord instanceof ByteMatriceWord)) {
 			System.out
 					.println("Warning you did not chose a ByteMatriceWord for the AES Encrypt."
@@ -68,57 +135,25 @@ public class AESEncrypt implements SymetricEncrypt {
 			pWord = new ByteMatriceWord(pWord.getByteArray(),
 					(int) Math.sqrt(pWord.getLength()), true);
 		}
-		ByteMatriceWord word = (ByteMatriceWord) pWord;
-
-		if (!(pKey instanceof AESKey)) {
-			System.out
-					.println("Warning you did not chose a AESKey for the AES Encrypt."
-							+ " It will be converted but it may cause subsequent problem");
-
-			pWord = new AESKey(pKey.getByteArray());
-
-		}
-		AESKey aesKey = (AESKey) pKey;
-
-		keySchedule.initializeKey(aesKey, nbRound);
-
-		word = addRoundKey(word, aesKey);
-		int i = 0;
-		for (; i < nbRound - 1; i++) {
-			word = subBytes(word);
-			word = shiftRows(word);
-			word = mixColumns(word);
-			word = addRoundKey(word, (AESKey) keySchedule.getRoundKey(i));
-		}
-		word = subBytes(word);
-		word = shiftRows(word);
-		word = addRoundKey(word, (AESKey) keySchedule.getRoundKey(i));
-
-		// final round (without mixColumns)
-
-		return word;
 	}
 
-	public Word decrypt(Word pWord, Key pKey) {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("not implemented yet");
-	}
-
-	private ByteMatriceWord subBytes(ByteMatriceWord pWord) {
-		pWord.subtitute(SUB_BYTES_TABLE);
+	private ByteMatriceWord subBytes(ByteMatriceWord pWord, boolean pReverse) {
+		pWord.subtitute(pReverse ? SUB_BYTES_REVERSE_TABLE : SUB_BYTES_TABLE);
 		return pWord;
 	}
 
-	private ByteMatriceWord shiftRows(ByteMatriceWord pWord) {
+	private ByteMatriceWord shiftRows(ByteMatriceWord pWord, boolean pReverse) {
 		for (int i = 0; i < pWord.getRowCount(); i++) {
-			pWord.shiftRow(i, i, false);
+			pWord.shiftRow(i, i, pReverse);
 		}
 		return pWord;
 	}
 
-	private ByteMatriceWord mixColumns(ByteMatriceWord pWord) {
+	private ByteMatriceWord mixColumns(ByteMatriceWord pWord, boolean pReverse) {
 		if (pWord.getRowCount() == 4) {
-			pWord = pWord.GF2Multiplication(MIX_COLUMN_MATRICE_4_x_4);
+			pWord = pWord
+					.GF2Multiplication(pReverse ? MIX_COLUMN_REVERSE_MATRIX_4_x_4
+							: MIX_COLUMN_MATRIX_4_x_4);
 		} else {
 			// TODO Auto-generated method stub
 			throw new RuntimeException("not implemented yet");

@@ -1,7 +1,7 @@
 package com.xqvier.encrypt.framework;
 
 
-public abstract class FeistelNetwork implements SymetricEncrypt {
+public abstract class FeistelNetwork implements Encrypt {
 
 	private KeySchedule keySchedule;
 

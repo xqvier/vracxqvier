@@ -23,4 +23,9 @@ public class DESKeySchedule implements KeySchedule {
 		return keyList.get(pRound);
 	}
 
+	public void initializeReverseKey(Key key, int pNbRound) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
